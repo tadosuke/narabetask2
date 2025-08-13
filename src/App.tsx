@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Task, WorkingHours } from "./types";
+import type { Task, WorkingHours } from "./types";
 import { TaskCard } from "./components/TaskCard";
 import { Timeline } from "./components/Timeline";
 import "./App.css";
@@ -112,7 +112,7 @@ function App() {
   // タスク更新
   const handleUpdateTask = (updatedTask: Task) => {
     setTasks(
-      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
+      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
   };
 
@@ -132,7 +132,7 @@ function App() {
     taskId: string,
     row: number,
     startTime: string,
-    duration: number,
+    duration: number
   ): boolean => {
     const startMinutes = timeToMinutes(startTime);
     const endMinutes = startMinutes + duration * 15;
@@ -153,7 +153,7 @@ function App() {
   const handleTaskDropToTimeline = (
     taskId: string,
     row: number,
-    startTime: string,
+    startTime: string
   ) => {
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
@@ -177,8 +177,8 @@ function App() {
 
     setTasks(
       tasks.map((t) =>
-        t.id === taskId ? { ...t, position: { row, startTime } } : t,
-      ),
+        t.id === taskId ? { ...t, position: { row, startTime } } : t
+      )
     );
   };
 
@@ -186,8 +186,8 @@ function App() {
   const handleTaskDropToPool = (taskId: string) => {
     setTasks(
       tasks.map((task) =>
-        task.id === taskId ? { ...task, position: null } : task,
-      ),
+        task.id === taskId ? { ...task, position: null } : task
+      )
     );
   };
 
