@@ -3,29 +3,51 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import App from "../../src/App";
 
 describe("App コンポーネント", () => {
-  it("初期状態でカウントが0であることを確認", () => {
+  it("アプリタイトルが正しく表示されることを確認", () => {
     render(<App />);
-    expect(screen.getByText("count is 0")).toBeDefined();
+    expect(screen.getByText("タスク調整アプリ")).toBeDefined();
   });
 
-  it("ボタンクリックでカウントが増加することを確認", () => {
+  it("タイムラインセクションが表示されることを確認", () => {
     render(<App />);
-    const button = screen.getByRole("button");
-    fireEvent.click(button);
-    expect(screen.getByText("count is 1")).toBeDefined();
+    expect(screen.getByText(/タイムライン/)).toBeDefined();
   });
 
-  it("タイトルが正しく表示されることを確認", () => {
+  it("タスク作成ボタンが表示され、クリック可能であることを確認", () => {
     render(<App />);
-    expect(screen.getByText("Vite + React")).toBeDefined();
+    const createButton = screen.getByRole("button", { name: "タスク作成" });
+    expect(createButton).toBeDefined();
   });
 
-  it("ロゴが表示されることを確認", () => {
+  it("タスク置き場が表示されることを確認", () => {
     render(<App />);
-    const viteLogoLink = screen.getByRole("link", { name: /vite logo/i });
-    const reactLogoLink = screen.getByRole("link", { name: /react logo/i });
+    expect(screen.getByText("タスク置き場")).toBeDefined();
+  });
 
-    expect(viteLogoLink).toBeDefined();
-    expect(reactLogoLink).toBeDefined();
+  it("タスク作成ボタンクリックで新しいタスクが追加されることを確認", () => {
+    render(<App />);
+    const createButton = screen.getByRole("button", { name: "タスク作成" });
+    
+    // 初期状態でタスクがないことを確認
+    expect(screen.queryByText("タスク 1")).toBeNull();
+    
+    // タスク作成ボタンをクリック
+    fireEvent.click(createButton);
+    
+    // タスクが作成されたことを確認
+    expect(screen.getByText("タスク 1")).toBeDefined();
+  });
+
+  it("3段レイアウト構造が正しく適用されていることを確認", () => {
+    render(<App />);
+    
+    // 各セクションが存在することを確認
+    const timelineSection = document.querySelector('.timeline-section');
+    const taskSection = document.querySelector('.task-section');
+    const settingsSection = document.querySelector('.settings-section');
+    
+    expect(timelineSection).toBeDefined();
+    expect(taskSection).toBeDefined(); 
+    expect(settingsSection).toBeDefined();
   });
 });

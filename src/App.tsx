@@ -202,16 +202,8 @@ function App() {
       </header>
 
       <div className="app-content">
-        <div className="left-panel">
-          <TaskCreator onCreateTask={handleCreateTask} />
-          <TaskPool
-            tasks={tasks}
-            onTaskClick={handleSelectTask}
-            onTaskDrop={handleTaskDropToPool}
-          />
-        </div>
-
-        <div className="center-panel">
+        {/* 上部：タイムライン（横スクロール可能） */}
+        <div className="timeline-section">
           <Timeline
             tasks={tasks}
             workingHours={workingHours}
@@ -220,7 +212,20 @@ function App() {
           />
         </div>
 
-        <div className="right-panel">
+        {/* 中部：タスク置き場 */}
+        <div className="task-section">
+          <div className="task-creator-area">
+            <TaskCreator onCreateTask={handleCreateTask} />
+          </div>
+          <TaskPool
+            tasks={tasks}
+            onTaskClick={handleSelectTask}
+            onTaskDrop={handleTaskDropToPool}
+          />
+        </div>
+
+        {/* 下部：タスク設定 */}
+        <div className="settings-section">
           <TaskSettings
             task={selectedTask}
             onUpdateTask={handleUpdateTask}
