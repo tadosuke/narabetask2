@@ -77,7 +77,7 @@ export const Timeline = ({
   };
 
   return (
-    <div className="timeline">
+    <div className="timeline" style={{ '--time-slots': timeSlots.length } as React.CSSProperties}>
       <h3>
         タイムライン ({workingHours.start} - {workingHours.end})
       </h3>

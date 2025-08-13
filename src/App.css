@@ -152,12 +152,12 @@
 
 .timeline-grid {
   display: grid;
-  grid-template-columns: 60px repeat(auto-fit, minmax(60px, 1fr));
+  grid-template-columns: 60px repeat(var(--time-slots), 60px);
   gap: 1px;
   background: #e9ecef;
   border-radius: 4px;
   overflow: hidden;
-  min-width: 100%;
+  min-width: max-content;
   width: max-content;
 }
 
