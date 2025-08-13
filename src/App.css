@@ -1,6 +1,9 @@
 /* アプリ全体のスタイル */
 .app {
+  width: 100%;
   min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
   font-family:
     system-ui,
     -apple-system,
@@ -23,8 +26,10 @@
   display: grid;
   grid-template-rows: 30% 40% 30%;
   height: calc(100vh - 80px);
+  width: 100%;
   gap: 1rem;
   padding: 1rem;
+  box-sizing: border-box;
 }
 
 /* 上部：タイムライン領域 */
@@ -152,6 +157,8 @@
   background: #e9ecef;
   border-radius: 4px;
   overflow: hidden;
+  min-width: 100%;
+  width: max-content;
 }
 
 .timeline-header {
@@ -262,6 +269,19 @@
 }
 
 /* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .app-content {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .timeline-section,
+  .task-section,
+  .settings-section {
+    padding: 0.75rem;
+  }
+}
+
 @media (max-height: 600px) {
   .app-content {
     grid-template-rows: 25% 50% 25%;
