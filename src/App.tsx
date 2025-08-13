@@ -127,7 +127,9 @@ function App() {
     return hours * 60 + minutes;
   };
 
-  // タスクの重複チェック
+  // タスクの重複チェック（同一行のみ・後方互換性のため保持）
+  // 新しいcheckAllRowsConflict関数で置き換え済み
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkTaskConflict = (
     taskId: string,
     row: number,
@@ -148,6 +150,54 @@ function App() {
       return !(endMinutes <= existingStart || startMinutes >= existingEnd);
     });
   };
+  // 全行での重複チェック（詳細な重複情報を返す）
+  const checkAllRowsConflict = (
+    taskId: string,
+    row: number,
+    startTime: string,
+    duration: number
+  ): { hasConflict: boolean; conflictingTasks: Array<{ task: Task; conflictType: string; overlapType: string }> } => {
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = startMinutes + duration * 15;
+    const conflictingTasks: Array<{ task: Task; conflictType: string; overlapType: string }> = [];
+
+    tasks.forEach((task) => {
+      if (task.id === taskId || task.position === null) return;
+
+      const existingStart = timeToMinutes(task.position.startTime);
+      const existingEnd = existingStart + task.duration * 15;
+
+      // 時間が重複するかチェック
+      const hasTimeOverlap = !(endMinutes <= existingStart || startMinutes >= existingEnd);
+      
+      if (hasTimeOverlap) {
+        const conflictType = task.position.row === row 
+          ? "同一行重複" 
+          : `異なる行重複 (行${task.position.row + 1})`;
+        
+        // 重複のタイプを詳細に分析
+        let overlapType = "完全重複";
+        if (startMinutes < existingStart && endMinutes > existingEnd) {
+          overlapType = "包含重複";
+        } else if (startMinutes >= existingStart && endMinutes <= existingEnd) {
+          overlapType = "内包重複";
+        } else if (startMinutes < existingStart) {
+          overlapType = "前半重複";
+        } else if (endMinutes > existingEnd) {
+          overlapType = "後半重複";
+        } else {
+          overlapType = "部分重複";
+        }
+        
+        conflictingTasks.push({ task, conflictType, overlapType });
+      }
+    });
+
+    return {
+      hasConflict: conflictingTasks.length > 0,
+      conflictingTasks
+    };
+  };
 
   // タスクをタイムラインにドロップ
   const handleTaskDropToTimeline = (
@@ -158,9 +208,30 @@ function App() {
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
 
-    // 重複チェック
-    if (checkTaskConflict(taskId, row, startTime, task.duration)) {
-      alert("他のタスクと時間が重複しています");
+    // 全行での重複チェック（詳細な重複情報を取得）
+    const conflictResult = checkAllRowsConflict(taskId, row, startTime, task.duration);
+    
+    if (conflictResult.hasConflict) {
+      // 詳細な重複警告メッセージを作成
+      const conflictMessages = conflictResult.conflictingTasks.map(({ task: conflictingTask, conflictType, overlapType }) => {
+        const conflictStart = conflictingTask.position!.startTime;
+        const conflictDuration = conflictingTask.duration * 15; // 分単位
+        const hours = Math.floor(conflictDuration / 60);
+        const minutes = conflictDuration % 60;
+        const durationText = hours > 0 ? `${hours}時間${minutes > 0 ? minutes + '分' : ''}` : `${minutes}分`;
+        
+        return `・${conflictType}: "${conflictingTask.name}" (${conflictStart}開始, ${durationText}) - ${overlapType}`;
+      }).join('\n');
+      
+      const summary = conflictResult.conflictingTasks.length === 1 
+        ? '1つのタスクと重複' 
+        : `${conflictResult.conflictingTasks.length}つのタスクと重複`;
+      
+      alert(`タスクの時間が重複しています (${summary}):
+
+${conflictMessages}
+
+別の時間帯または行に配置してください。`);
       return;
     }
 

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { Task, WorkingHours } from "../types";
 import { TaskCard } from "./TaskCard";
 
@@ -56,8 +57,33 @@ export const Timeline = ({
     onTaskDrop(taskId, row, timeSlot);
   };
 
-  // タスクがタイムライン上にあるかチェック
-  const timelineTasks = tasks.filter((task) => task.position !== null);
+  // タスクがタイムライン上にあるかチェック（メモ化）
+  const timelineTasks = useMemo(() => 
+    tasks.filter((task) => task.position !== null), 
+    [tasks]
+  );
+  // 時間スロットごとのタスクマップを作成（メモ化によるパフォーマンス最適化）
+  const timeSlotTaskMap = useMemo(() => {
+    const map = new Map<string, Task[]>();
+    
+    timelineTasks.forEach((task) => {
+      if (!task.position) return;
+      
+      const taskStart = timeToMinutes(task.position.startTime);
+      const taskEnd = taskStart + task.duration * 15;
+      
+      // タスクが占有する各15分スロットをマップに追加
+      for (let time = taskStart; time < taskEnd; time += 15) {
+        const timeSlot = minutesToTime(time);
+        if (!map.has(timeSlot)) {
+          map.set(timeSlot, []);
+        }
+        map.get(timeSlot)!.push(task);
+      }
+    });
+    
+    return map;
+  }, [timelineTasks]);
 
   // 特定の位置にタスクがあるかチェック
   const getTaskAtPosition = (row: number, timeSlot: string): Task | null => {
@@ -74,6 +100,16 @@ export const Timeline = ({
         return slotTime >= taskStart && slotTime < taskEnd;
       }) || null
     );
+  };
+  // 特定の時間帯に重複があるかチェック（最適化版）
+  const checkTimeSlotConflict = (timeSlot: string): boolean => {
+    const tasksInSlot = timeSlotTaskMap.get(timeSlot) || [];
+    return tasksInSlot.length > 1;
+  };
+  
+  // 特定の時間帯にある全てのタスクを取得（最適化版）
+  const getTasksInTimeSlot = (timeSlot: string): Task[] => {
+    return timeSlotTaskMap.get(timeSlot) || [];
   };
 
   return (
@@ -100,11 +136,20 @@ export const Timeline = ({
 
             {timeSlots.map((timeSlot) => {
               const taskAtPosition = getTaskAtPosition(rowIndex, timeSlot);
+              const hasConflict = checkTimeSlotConflict(timeSlot);
+              const isConflictSlot = hasConflict && taskAtPosition;
+              const conflictingTasks = hasConflict ? getTasksInTimeSlot(timeSlot) : [];
+
+              // 重複情報のツールチップテキストを生成
+              const conflictTooltip = hasConflict 
+                ? `重複検出: ${conflictingTasks.map(task => `"${task.name}" (行${task.position!.row + 1})`).join(', ')}`
+                : '';
 
               return (
                 <div
                   key={`${rowIndex}-${timeSlot}`}
-                  className={`timeline-slot ${taskAtPosition ? "occupied" : "empty"}`}
+                  className={`timeline-slot ${taskAtPosition ? "occupied" : "empty"} ${isConflictSlot ? "conflict" : ""}`}
+                  title={conflictTooltip}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, rowIndex, timeSlot)}
                 >
@@ -112,6 +157,9 @@ export const Timeline = ({
                     timeSlot === taskAtPosition.position!.startTime && (
                       <TaskCard task={taskAtPosition} onClick={onTaskClick} />
                     )}
+                  {isConflictSlot && (
+                    <div className="conflict-indicator">⚠️</div>
+                  )}
                 </div>
               );
             })}
