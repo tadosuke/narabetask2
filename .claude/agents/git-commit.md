@@ -1,6 +1,6 @@
 ---
-name: git-committer
-description: Use this agent when you need to commit changes to a Git repository with automatically generated commit messages. Examples: <example>Context: User has made changes to several files and wants to commit them. user: 'ファイルを更新したのでコミットしてください' assistant: 'Gitコミッターエージェントを使用して変更をコミットします' <commentary>Since the user wants to commit changes, use the git-committer agent to stage and commit the changes with an appropriate message.</commentary></example> <example>Context: User has finished implementing a feature and needs to commit. user: 'ログイン機能の実装が完了しました。コミットお願いします。' assistant: 'git-committerエージェントを使用してログイン機能の実装をコミットします' <commentary>The user has completed a feature implementation and needs it committed, so use the git-committer agent.</commentary></example>
+name: git-commit
+description: Use this agent when you need to commit changes to a Git repository with automatically generated commit messages. Examples: <example>Context: User has made changes to several files and wants to commit them. user: 'ファイルを更新したのでコミットしてください' assistant: 'Gitコミッターエージェントを使用して変更をコミットします' <commentary>Since the user wants to commit changes, use the git-commit agent to stage and commit the changes with an appropriate message.</commentary></example> <example>Context: User has finished implementing a feature and needs to commit. user: 'ログイン機能の実装が完了しました。コミットお願いします。' assistant: 'git-commitエージェントを使用してログイン機能の実装をコミットします' <commentary>The user has completed a feature implementation and needs it committed, so use the git-commit agent.</commentary></example>
 model: sonnet
 color: green
 ---
