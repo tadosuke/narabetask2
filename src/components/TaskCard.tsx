@@ -1,24 +1,24 @@
-import { Task } from "../types"
+import type { Task } from "../types";
 
 interface TaskCardProps {
-  task: Task
-  onClick: (taskId: string) => void
-  isDragging?: boolean
+  task: Task;
+  onClick: (taskId: string) => void;
+  isDragging?: boolean;
 }
 
 export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("text/plain", task.id)
-    e.dataTransfer.effectAllowed = "move"
-  }
+    e.dataTransfer.setData("text/plain", task.id);
+    e.dataTransfer.effectAllowed = "move";
+  };
 
   const handleClick = () => {
-    onClick(task.id)
-  }
+    onClick(task.id);
+  };
 
   return (
     <div
-      className={`task-card ${isDragging ? 'dragging' : ''}`}
+      className={`task-card ${isDragging ? "dragging" : ""}`}
       draggable
       onDragStart={handleDragStart}
       onClick={handleClick}
@@ -30,5 +30,5 @@ export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
         <span className="task-duration">{task.duration * 15}分</span>
       </div>
     </div>
-  )
-}
+  );
+};

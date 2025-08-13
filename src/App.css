@@ -1,7 +1,10 @@
 /* アプリ全体のスタイル */
 .app {
   min-height: 100vh;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 .app-header {
