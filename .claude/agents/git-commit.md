@@ -1,7 +1,7 @@
 ---
 name: git-commit
 description: Git のコミットを要求されたときにこのエージェントを使用してください。
-model: sonnet
+model: haiku
 color: green
 ---
 
