@@ -4,13 +4,20 @@ import { TaskCard } from "./components/TaskCard";
 import { Timeline } from "./components/Timeline";
 import "./App.css";
 
-// コンポーネントのプレースホルダー（後で実装）
+/**
+ * タスク作成コンポーネント
+ * 新しいタスクを作成するためのボタンを提供
+ */
 const TaskCreator = ({ onCreateTask }: { onCreateTask: () => void }) => (
   <div>
     <button onClick={onCreateTask}>タスク作成</button>
   </div>
 );
 
+/**
+ * タスク置き場コンポーネント
+ * 未スケジュールのタスクを表示し、ドラッグ&ドロップでタスクの受け取りが可能
+ */
 const TaskPool = ({
   tasks,
   onTaskClick,
@@ -45,6 +52,10 @@ const TaskPool = ({
   );
 };
 
+/**
+ * タスク設定コンポーネント
+ * 選択されたタスクの名前や工数を編集する機能を提供
+ */
 const TaskSettings = ({
   task,
   onUpdateTask,
@@ -85,81 +96,95 @@ const TaskSettings = ({
   );
 };
 
+/**
+ * メインアプリケーションコンポーネント
+ * タスクの作成・編集・スケジューリング機能を提供
+ */
 function App() {
+  // 全タスクのリスト（タスク置き場およびタイムライン上のタスク）
   const [tasks, setTasks] = useState<Task[]>([]);
+  // 現在選択されているタスクのID（設定画面表示用）
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  // 業務時間の設定（開始・終了時刻）
   const [workingHours] = useState<WorkingHours>({
     start: "09:00",
     end: "18:00",
   });
 
-  // タスク作成
+  /**
+   * 新しいタスクを作成してタスク置き場に追加
+   */
   const handleCreateTask = () => {
     const newTask: Task = {
       id: `task-${Date.now()}`,
       name: `タスク ${tasks.length + 1}`,
-      duration: 2, // デフォルト30分
-      position: null, // タスク置き場に配置
+      duration: 2, // デフォルト30分（15分単位で2 = 30分）
+      position: null, // タスク置き場に配置（タイムライン上ではない）
     };
     setTasks([...tasks, newTask]);
   };
 
-  // タスク選択
+  /**
+   * タスクを選択して設定画面を表示
+   */
   const handleSelectTask = (taskId: string) => {
     setSelectedTaskId(taskId);
   };
 
-  // タスク更新
+  /**
+   * タスクの情報を更新（名前、工数など）
+   */
   const handleUpdateTask = (updatedTask: Task) => {
     setTasks(
       tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
   };
 
-  // タスク選択解除
+  /**
+   * タスク選択を解除して設定画面を閉じる
+   */
   const handleCloseSettings = () => {
     setSelectedTaskId(null);
   };
 
-  // 時間をHH:MM形式から分単位に変換
+  /**
+   * 時間をHH:MM形式から分単位に変換
+   * @param timeStr "09:30" 形式の時間文字列
+   * @returns 分単位の数値（例：570分）
+   */
   const timeToMinutes = (timeStr: string): number => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-  // タスクの重複チェック（同一行のみ・後方互換性のため保持）
-  // 新しいcheckAllRowsConflict関数で置き換え済み
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const checkTaskConflict = (
-    taskId: string,
-    row: number,
-    startTime: string,
-    duration: number
-  ): boolean => {
-    const startMinutes = timeToMinutes(startTime);
-    const endMinutes = startMinutes + duration * 15;
-
-    return tasks.some((task) => {
-      if (task.id === taskId || task.position === null) return false;
-      if (task.position.row !== row) return false;
-
-      const existingStart = timeToMinutes(task.position.startTime);
-      const existingEnd = existingStart + task.duration * 15;
-
-      // 時間が重複するかチェック
-      return !(endMinutes <= existingStart || startMinutes >= existingEnd);
-    });
-  };
-  // 全行での重複チェック（詳細な重複情報を返す）
+  /**
+   * 全行でのタスク重複チェック（詳細な重複情報を返す）
+   * @param taskId チェック対象のタスクID
+   * @param row 配置予定の行番号
+   * @param startTime 開始時刻（HH:MM形式）
+   * @param duration 所要時間（15分単位）
+   * @returns 重複有無と詳細な重複情報
+   */
   const checkAllRowsConflict = (
     taskId: string,
     row: number,
     startTime: string,
     duration: number
-  ): { hasConflict: boolean; conflictingTasks: Array<{ task: Task; conflictType: string; overlapType: string }> } => {
+  ): {
+    hasConflict: boolean;
+    conflictingTasks: Array<{
+      task: Task;
+      conflictType: string;
+      overlapType: string;
+    }>;
+  } => {
     const startMinutes = timeToMinutes(startTime);
     const endMinutes = startMinutes + duration * 15;
-    const conflictingTasks: Array<{ task: Task; conflictType: string; overlapType: string }> = [];
+    const conflictingTasks: Array<{
+      task: Task;
+      conflictType: string;
+      overlapType: string;
+    }> = [];
 
     tasks.forEach((task) => {
       if (task.id === taskId || task.position === null) return;
@@ -168,13 +193,16 @@ function App() {
       const existingEnd = existingStart + task.duration * 15;
 
       // 時間が重複するかチェック
-      const hasTimeOverlap = !(endMinutes <= existingStart || startMinutes >= existingEnd);
-      
+      const hasTimeOverlap = !(
+        endMinutes <= existingStart || startMinutes >= existingEnd
+      );
+
       if (hasTimeOverlap) {
-        const conflictType = task.position.row === row 
-          ? "同一行重複" 
-          : `異なる行重複 (行${task.position.row + 1})`;
-        
+        const conflictType =
+          task.position.row === row
+            ? "同一行重複"
+            : `異なる行重複 (行${task.position.row + 1})`;
+
         // 重複のタイプを詳細に分析
         let overlapType = "完全重複";
         if (startMinutes < existingStart && endMinutes > existingEnd) {
@@ -188,18 +216,21 @@ function App() {
         } else {
           overlapType = "部分重複";
         }
-        
+
         conflictingTasks.push({ task, conflictType, overlapType });
       }
     });
 
     return {
       hasConflict: conflictingTasks.length > 0,
-      conflictingTasks
+      conflictingTasks,
     };
   };
 
-  // タスクをタイムラインにドロップ
+  /**
+   * タスクをタイムラインにドロップした際の処理
+   * 重複チェックと業務時間チェックを行った後にタスクを配置
+   */
   const handleTaskDropToTimeline = (
     taskId: string,
     row: number,
@@ -209,24 +240,35 @@ function App() {
     if (!task) return;
 
     // 全行での重複チェック（詳細な重複情報を取得）
-    const conflictResult = checkAllRowsConflict(taskId, row, startTime, task.duration);
-    
+    const conflictResult = checkAllRowsConflict(
+      taskId,
+      row,
+      startTime,
+      task.duration
+    );
+
     if (conflictResult.hasConflict) {
       // 詳細な重複警告メッセージを作成
-      const conflictMessages = conflictResult.conflictingTasks.map(({ task: conflictingTask, conflictType, overlapType }) => {
-        const conflictStart = conflictingTask.position!.startTime;
-        const conflictDuration = conflictingTask.duration * 15; // 分単位
-        const hours = Math.floor(conflictDuration / 60);
-        const minutes = conflictDuration % 60;
-        const durationText = hours > 0 ? `${hours}時間${minutes > 0 ? minutes + '分' : ''}` : `${minutes}分`;
-        
-        return `・${conflictType}: "${conflictingTask.name}" (${conflictStart}開始, ${durationText}) - ${overlapType}`;
-      }).join('\n');
-      
-      const summary = conflictResult.conflictingTasks.length === 1 
-        ? '1つのタスクと重複' 
-        : `${conflictResult.conflictingTasks.length}つのタスクと重複`;
-      
+      const conflictMessages = conflictResult.conflictingTasks
+        .map(({ task: conflictingTask, conflictType, overlapType }) => {
+          const conflictStart = conflictingTask.position!.startTime;
+          const conflictDuration = conflictingTask.duration * 15; // 分単位
+          const hours = Math.floor(conflictDuration / 60);
+          const minutes = conflictDuration % 60;
+          const durationText =
+            hours > 0
+              ? `${hours}時間${minutes > 0 ? minutes + "分" : ""}`
+              : `${minutes}分`;
+
+          return `・${conflictType}: "${conflictingTask.name}" (${conflictStart}開始, ${durationText}) - ${overlapType}`;
+        })
+        .join("\n");
+
+      const summary =
+        conflictResult.conflictingTasks.length === 1
+          ? "1つのタスクと重複"
+          : `${conflictResult.conflictingTasks.length}つのタスクと重複`;
+
       alert(`タスクの時間が重複しています (${summary}):
 
 ${conflictMessages}
@@ -253,7 +295,10 @@ ${conflictMessages}
     );
   };
 
-  // タスクをタスク置き場に戻す
+  /**
+   * タスクをタスク置き場に戻す
+   * タイムライン上のタスクをタスク置き場にドロップした際の処理
+   */
   const handleTaskDropToPool = (taskId: string) => {
     setTasks(
       tasks.map((task) =>
@@ -262,6 +307,7 @@ ${conflictMessages}
     );
   };
 
+  // 現在選択されているタスクオブジェクトを取得
   const selectedTask = selectedTaskId
     ? tasks.find((task) => task.id === selectedTaskId) || null
     : null;
