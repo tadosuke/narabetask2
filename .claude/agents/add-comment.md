@@ -1,7 +1,7 @@
 ---
 name: add-comment
 description: コードを変更した後に呼ばれます。
-tools: Glob, Grep, LS, Read, Edit, MultiEdit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash, ListMcpResourcesTool, ReadMcpResourceTool
+tools: Glob, Grep, LS, Read, Edit, MultiEdit, Write, WebFetch, TodoWrite, WebSearch, BashOutput, KillBash
 model: haiku
 color: cyan
 ---
