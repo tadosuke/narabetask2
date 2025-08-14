@@ -1,7 +1,7 @@
 ---
 name: test-from-impl
 description: 実装からテストを作成する必要がある時にこのエージェントを使用してください。
-tools: Glob, Grep, LS, Read, Edit, MultiEdit, Write, TodoWrite, BashOutput, KillBash, ListMcpResourcesTool, ReadMcpResourceTool, mcp__ide__getDiagnostics, mcp__ide__executeCode, mcp__serena__list_dir, mcp__serena__find_file, mcp__serena__search_for_pattern, mcp__serena__get_symbols_overview, mcp__serena__find_symbol, mcp__serena__find_referencing_symbols, mcp__serena__replace_symbol_body, mcp__serena__insert_after_symbol, mcp__serena__insert_before_symbol, mcp__serena__write_memory, mcp__serena__read_memory, mcp__serena__list_memories, mcp__serena__delete_memory, mcp__serena__check_onboarding_performed, mcp__serena__onboarding, mcp__serena__think_about_collected_information, mcp__serena__think_about_task_adherence, mcp__serena__think_about_whether_you_are_done
+tools: Glob, Grep, LS, Read, Edit, MultiEdit, Write, TodoWrite, BashOutput, KillBash, ListMcpResourcesTool, ReadMcpResourceTool, mcp__ide__getDiagnostics, mcp__ide__executeCode, Bash
 model: sonnet
 color: pink
 ---
@@ -16,6 +16,7 @@ color: pink
 3. テストケースの優先順位を決定（正常系 → 境界値 → 異常系）
 4. 適切なテストフレームワーク（Vitest）の記法でテストを作成
 5. テストの可読性と保守性を重視した構造化
+6. 対応後にテストを実行し、結果を見て適宜修正を行う
 
 **制約事項:**
 
