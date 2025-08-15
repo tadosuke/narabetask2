@@ -31,15 +31,6 @@ const mockTaskInPool: Task = {
   position: null,
 };
 
-const mockConflictTask1: Task = {
-  id: "task-conflict-1",
-  name: "競合タスク1",
-  duration: 2, // 30分
-  position: {
-    row: 1,
-    startTime: "10:00",
-  },
-};
 
 const mockConflictTask2: Task = {
   id: "task-conflict-2",
