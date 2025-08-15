@@ -32,15 +32,6 @@ const mockTaskInPool: Task = {
 };
 
 
-const mockConflictTask2: Task = {
-  id: "task-conflict-2",
-  name: "競合タスク2",
-  duration: 1, // 15分
-  position: {
-    row: 2, // 異なる行だが、同じ時間帯に配置して競合テスト用
-    startTime: "10:00",
-  },
-};
 
 describe("Timeline コンポーネント", () => {
   describe("基本レンダリング", () => {
@@ -297,7 +288,7 @@ describe("Timeline コンポーネント", () => {
         dropEffect: "",
       };
 
-      const dragOverEvent = new Event("dragover", { bubbles: true }) as any;
+      const dragOverEvent = new Event("dragover", { bubbles: true }) as DragEvent;
       dragOverEvent.dataTransfer = mockDataTransfer;
       dragOverEvent.preventDefault = vi.fn();
 
