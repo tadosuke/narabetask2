@@ -121,7 +121,6 @@ export const Timeline = ({
       <div className="timeline-grid">
         {/* ヘッダー行（時刻表示） */}
         <div className="timeline-header">
-          <div className="timeline-row-label"></div>
           {timeSlots.map((timeSlot) => (
             <div key={timeSlot} className="timeline-time-slot-header">
               {timeSlot}
@@ -132,8 +131,6 @@ export const Timeline = ({
         {/* タイムライン行 */}
         {Array.from({ length: timelineRows }, (_, rowIndex) => (
           <div key={rowIndex} className="timeline-row">
-            <div className="timeline-row-label">行 {rowIndex + 1}</div>
-
             {timeSlots.map((timeSlot) => {
               const taskAtPosition = getTaskAtPosition(rowIndex, timeSlot);
               const hasConflict = checkTimeSlotConflict(timeSlot);
