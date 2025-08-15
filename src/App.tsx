@@ -59,18 +59,18 @@ const TaskPool = ({
 const TaskSettings = ({
   task,
   onUpdateTask,
-  onClose,
+  onDeleteTask,
 }: {
   task: Task | null;
   onUpdateTask: (task: Task) => void;
-  onClose: () => void;
+  onDeleteTask: (taskId: string) => void;
 }) => {
   if (!task) return null;
 
   return (
     <div>
       <h3>タスク設定</h3>
-      <button onClick={onClose}>×</button>
+      <button onClick={() => onDeleteTask(task.id)}>×</button>
       <div>
         <label>タスク名: </label>
         <input
@@ -140,10 +140,12 @@ function App() {
     );
   };
 
+
   /**
-   * タスク選択を解除して設定画面を閉じる
+   * タスクを削除する
    */
-  const handleCloseSettings = () => {
+  const handleDeleteTask = (taskId: string) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
     setSelectedTaskId(null);
   };
 
@@ -346,7 +348,7 @@ ${conflictMessages}
           <TaskSettings
             task={selectedTask}
             onUpdateTask={handleUpdateTask}
-            onClose={handleCloseSettings}
+            onDeleteTask={handleDeleteTask}
           />
         </div>
       </div>
