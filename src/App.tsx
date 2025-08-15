@@ -315,7 +315,7 @@ ${conflictMessages}
   return (
     <div className="app">
       <header className="app-header">
-        <h1>タスク調整アプリ</h1>
+        <h1>ナラベタスク</h1>
       </header>
 
       <div className="app-content">
