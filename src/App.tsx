@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Task, WorkingHours } from "./types";
 import { TaskCard } from "./components/TaskCard";
 import { Timeline } from "./components/Timeline";
+import { TaskSettings } from "./components/TaskSettings";
 import "./App.css";
 
 /**
@@ -52,49 +53,6 @@ const TaskPool = ({
   );
 };
 
-/**
- * タスク設定コンポーネント
- * 選択されたタスクの名前や工数を編集する機能を提供
- */
-const TaskSettings = ({
-  task,
-  onUpdateTask,
-  onDeleteTask,
-}: {
-  task: Task | null;
-  onUpdateTask: (task: Task) => void;
-  onDeleteTask: (taskId: string) => void;
-}) => {
-  if (!task) return null;
-
-  return (
-    <div>
-      <h3>タスク設定</h3>
-      <button onClick={() => onDeleteTask(task.id)}>×</button>
-      <div>
-        <label>タスク名: </label>
-        <input
-          value={task.name}
-          onChange={(e) => onUpdateTask({ ...task, name: e.target.value })}
-        />
-      </div>
-      <div>
-        <label>工数: </label>
-        <select
-          value={task.duration}
-          onChange={(e) =>
-            onUpdateTask({ ...task, duration: Number(e.target.value) })
-          }
-        >
-          <option value={1}>15分</option>
-          <option value={2}>30分</option>
-          <option value={3}>45分</option>
-          <option value={4}>1時間</option>
-        </select>
-      </div>
-    </div>
-  );
-};
 
 /**
  * メインアプリケーションコンポーネント
