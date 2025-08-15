@@ -5,4 +5,3 @@
   - 新規プロジェクト作成時や依存関係追加時は必ずバージョンを固定化
   - npm install 後は package.json を確認し、範囲指定があれば除去する
 - ターミナルは PowerShell を使用
-- `bash` 専用コマンドを直接実行しない（ClaudeCode の `Bash(*)` コマンドは OK）
