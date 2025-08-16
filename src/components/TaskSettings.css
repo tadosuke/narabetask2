@@ -1,4 +1,11 @@
 /* TaskSettings Component Styles */
+.task-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .settings-section h3 {
   margin: 0 0 1rem 0;
   color: #495057;
@@ -59,12 +66,36 @@
 }
 
 /* Task name and duration styling */
+.task-settings-title {
+  margin: 0;
+}
+
+.task-settings-label {
+  flex-shrink: 0;
+}
+
 .task-input-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
   line-height: 4em;
+}
+
+.task-duration-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.task-duration-slider {
+  width: 300px;
+}
+
+.task-duration-display {
+  min-width: 80px;
+  text-align: right;
 }
 
 #task-name {

@@ -49,15 +49,8 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
   return (
     <div>
       {/* Section title with delete button on the right */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1rem',
-        }}
-      >
-        <h3 style={{ margin: 0 }}>タスク設定</h3>
+      <div className="task-settings-header">
+        <h3 className="task-settings-title">タスク設定</h3>
         {/* Delete task button */}
         <button onClick={() => onDeleteTask(task.id)} aria-label="Delete task">
           <span className="material-icons">delete</span>
@@ -66,7 +59,7 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
 
       {/* Task name input field */}
       <div className="task-input-container">
-        <label htmlFor="task-name" style={{ flexShrink: 0 }}>
+        <label htmlFor="task-name" className="task-settings-label">
           タスク名:{' '}
         </label>
         <input
@@ -81,15 +74,8 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
       </div>
 
       {/* Task duration selection */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <label htmlFor="task-duration" style={{ flexShrink: 0 }}>
+      <div className="task-duration-container">
+        <label htmlFor="task-duration" className="task-settings-label">
           工数:{' '}
         </label>
         <input
@@ -104,9 +90,9 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
             onUpdateTask({ ...task, duration: Number(e.target.value) })
           }
           aria-label="Select task duration"
-          style={{ width: '300px' }}
+          className="task-duration-slider"
         />
-        <span style={{ minWidth: '80px', textAlign: 'right' }}>
+        <span className="task-duration-display">
           {task.duration * 15}分
         </span>
       </div>
