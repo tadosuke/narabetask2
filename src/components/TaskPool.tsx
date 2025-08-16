@@ -1,6 +1,7 @@
 import type { Task } from '../types';
 import { TaskCard } from './TaskCard';
 import { TaskService } from '../services/taskService';
+import './TaskPool.css';
 
 /**
  * Task creation component

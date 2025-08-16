@@ -1,0 +1,28 @@
+/* Task Pool Component Styles */
+
+/* Task pool container */
+.task-pool {
+  flex: 1;
+  min-height: 150px;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: border-color 0.2s;
+}
+
+.task-pool:hover {
+  border-color: #007bff;
+}
+
+.task-pool h3 {
+  margin: 0 0 1rem 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.task-pool-content {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
