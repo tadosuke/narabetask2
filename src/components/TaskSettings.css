@@ -59,6 +59,14 @@
 }
 
 /* Task name and duration styling */
+.task-input-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  line-height: 4em;
+}
+
 #task-name {
   width: 200px;
   display: inline-block;
@@ -66,7 +74,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: none;
-  line-height: 2em;
 }
 
 #task-duration {

@@ -65,14 +65,7 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
       </div>
 
       {/* Task name input field */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          whiteSpace: 'nowrap',
-        }}
-      >
+      <div className="task-input-container">
         <label htmlFor="task-name" style={{ flexShrink: 0 }}>
           タスク名:{' '}
         </label>
