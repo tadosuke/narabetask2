@@ -5,7 +5,7 @@ import App from "../../src/App";
 describe("App コンポーネント", () => {
   it("アプリタイトルが正しく表示されることを確認", () => {
     render(<App />);
-    expect(screen.getByText("タスク調整アプリ")).toBeDefined();
+    expect(screen.getByText("ナラベタスク")).toBeDefined();
   });
 
   it("タイムラインセクションが表示されることを確認", () => {

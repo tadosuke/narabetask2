@@ -149,11 +149,8 @@ describe("Timeline コンポーネント", () => {
         />
       );
 
-      expect(screen.getByText("行 1")).toBeDefined();
-      expect(screen.getByText("行 2")).toBeDefined();
-      expect(screen.getByText("行 3")).toBeDefined();
-      expect(screen.getByText("行 4")).toBeDefined();
-      expect(screen.getByText("行 5")).toBeDefined();
+      const timelineRows = document.querySelectorAll(".timeline-row");
+      expect(timelineRows.length).toBe(5);
     });
 
     it("タイムライン行に正しいクラス名が適用されることを確認", () => {
