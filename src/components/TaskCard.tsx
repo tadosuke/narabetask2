@@ -1,4 +1,4 @@
-import type { Task } from "../types";
+import type { Task } from '../types';
 
 interface TaskCardProps {
   task: Task;
@@ -8,8 +8,8 @@ interface TaskCardProps {
 
 export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
   const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData("text/plain", task.id);
-    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData('text/plain', task.id);
+    e.dataTransfer.effectAllowed = 'move';
   };
 
   const handleClick = () => {
@@ -18,7 +18,7 @@ export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
 
   return (
     <div
-      className={`task-card ${isDragging ? "dragging" : ""}`}
+      className={`task-card ${isDragging ? 'dragging' : ''}`}
       draggable
       onDragStart={handleDragStart}
       onClick={handleClick}

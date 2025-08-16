@@ -20,4 +20,4 @@ export interface WorkingHours {
   end: string; // 業務終了時刻（例："18:00"）
 }
 
-export type TaskStatus = "pool" | "timeline";
+export type TaskStatus = 'pool' | 'timeline';

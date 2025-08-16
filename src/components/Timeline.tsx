@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import type { Task, WorkingHours } from "../types";
-import { TaskCard } from "./TaskCard";
+import { useMemo } from 'react';
+import type { Task, WorkingHours } from '../types';
+import { TaskCard } from './TaskCard';
 
 interface TimelineProps {
   tasks: Task[];
@@ -17,7 +17,7 @@ export const Timeline = ({
 }: TimelineProps) => {
   // 時間をHH:MM形式から分単位に変換
   const timeToMinutes = (timeStr: string): number => {
-    const [hours, minutes] = timeStr.split(":").map(Number);
+    const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
   };
 
@@ -25,7 +25,7 @@ export const Timeline = ({
   const minutesToTime = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
-    return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
   };
 
   // 15分単位のタイムスロットを生成
@@ -47,20 +47,20 @@ export const Timeline = ({
   // ドラッグオーバー処理
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.dropEffect = 'move';
   };
 
   // ドロップ処理
   const handleDrop = (e: React.DragEvent, row: number, timeSlot: string) => {
     e.preventDefault();
-    const taskId = e.dataTransfer.getData("text/plain");
+    const taskId = e.dataTransfer.getData('text/plain');
     onTaskDrop(taskId, row, timeSlot);
   };
 
   // タスクがタイムライン上にあるかチェック（メモ化）
   const timelineTasks = useMemo(
     () => tasks.filter((task) => task.position !== null),
-    [tasks],
+    [tasks]
   );
   // 時間スロットごとのタスクマップを作成（メモ化によるパフォーマンス最適化）
   const timeSlotTaskMap = useMemo(() => {
@@ -115,7 +115,7 @@ export const Timeline = ({
   return (
     <div
       className="timeline"
-      style={{ "--time-slots": timeSlots.length } as React.CSSProperties}
+      style={{ '--time-slots': timeSlots.length } as React.CSSProperties}
     >
       <h3>
         タイムライン ({workingHours.start} - {workingHours.end})
@@ -144,13 +144,13 @@ export const Timeline = ({
 
               // 重複情報のツールチップテキストを生成
               const conflictTooltip = hasConflict
-                ? `重複検出: ${conflictingTasks.map((task) => `"${task.name}" (行${task.position!.row + 1})`).join(", ")}`
-                : "";
+                ? `重複検出: ${conflictingTasks.map((task) => `"${task.name}" (行${task.position!.row + 1})`).join(', ')}`
+                : '';
 
               return (
                 <div
                   key={`${rowIndex}-${timeSlot}`}
-                  className={`timeline-slot ${taskAtPosition ? "occupied" : "empty"} ${isConflictSlot ? "conflict" : ""}`}
+                  className={`timeline-slot ${taskAtPosition ? 'occupied' : 'empty'} ${isConflictSlot ? 'conflict' : ''}`}
                   title={conflictTooltip}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, rowIndex, timeSlot)}

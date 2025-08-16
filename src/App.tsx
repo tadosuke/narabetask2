@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import type { Task, WorkingHours } from "./types";
-import { TaskCard } from "./components/TaskCard";
-import { Timeline } from "./components/Timeline";
-import { TaskSettings } from "./components/TaskSettings";
-import "./App.css";
+import { useState, useEffect, useCallback } from 'react';
+import type { Task, WorkingHours } from './types';
+import { TaskCard } from './components/TaskCard';
+import { Timeline } from './components/Timeline';
+import { TaskSettings } from './components/TaskSettings';
+import './App.css';
 
 /**
  * タスク作成コンポーネント
@@ -30,12 +30,12 @@ const TaskPool = ({
 }) => {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.dropEffect = 'move';
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const taskId = e.dataTransfer.getData("text/plain");
+    const taskId = e.dataTransfer.getData('text/plain');
     onTaskDrop(taskId);
   };
 
@@ -64,8 +64,8 @@ function App() {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   // 業務時間の設定（開始・終了時刻）
   const [workingHours] = useState<WorkingHours>({
-    start: "09:00",
-    end: "18:00",
+    start: '09:00',
+    end: '18:00',
   });
 
   /**
@@ -93,7 +93,7 @@ function App() {
    */
   const handleUpdateTask = (updatedTask: Task) => {
     setTasks(
-      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
+      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
   };
 
@@ -105,7 +105,7 @@ function App() {
       setTasks(tasks.filter((task) => task.id !== taskId));
       setSelectedTaskId(null);
     },
-    [tasks],
+    [tasks]
   );
 
   /**
@@ -113,14 +113,14 @@ function App() {
    */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Delete" && selectedTaskId) {
+      if (event.key === 'Delete' && selectedTaskId) {
         handleDeleteTask(selectedTaskId);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedTaskId, handleDeleteTask]);
 
@@ -130,7 +130,7 @@ function App() {
    * @returns 分単位の数値（例：570分）
    */
   const timeToMinutes = (timeStr: string): number => {
-    const [hours, minutes] = timeStr.split(":").map(Number);
+    const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
   };
 
@@ -146,7 +146,7 @@ function App() {
     taskId: string,
     row: number,
     startTime: string,
-    duration: number,
+    duration: number
   ): {
     hasConflict: boolean;
     conflictingTasks: Array<{
@@ -177,21 +177,21 @@ function App() {
       if (hasTimeOverlap) {
         const conflictType =
           task.position.row === row
-            ? "同一行重複"
+            ? '同一行重複'
             : `異なる行重複 (行${task.position.row + 1})`;
 
         // 重複のタイプを詳細に分析
-        let overlapType = "完全重複";
+        let overlapType = '完全重複';
         if (startMinutes < existingStart && endMinutes > existingEnd) {
-          overlapType = "包含重複";
+          overlapType = '包含重複';
         } else if (startMinutes >= existingStart && endMinutes <= existingEnd) {
-          overlapType = "内包重複";
+          overlapType = '内包重複';
         } else if (startMinutes < existingStart) {
-          overlapType = "前半重複";
+          overlapType = '前半重複';
         } else if (endMinutes > existingEnd) {
-          overlapType = "後半重複";
+          overlapType = '後半重複';
         } else {
-          overlapType = "部分重複";
+          overlapType = '部分重複';
         }
 
         conflictingTasks.push({ task, conflictType, overlapType });
@@ -211,7 +211,7 @@ function App() {
   const handleTaskDropToTimeline = (
     taskId: string,
     row: number,
-    startTime: string,
+    startTime: string
   ) => {
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
@@ -221,7 +221,7 @@ function App() {
       taskId,
       row,
       startTime,
-      task.duration,
+      task.duration
     );
 
     if (conflictResult.hasConflict) {
@@ -234,20 +234,20 @@ function App() {
           const minutes = conflictDuration % 60;
           const durationText =
             hours > 0
-              ? `${hours}時間${minutes > 0 ? minutes + "分" : ""}`
+              ? `${hours}時間${minutes > 0 ? minutes + '分' : ''}`
               : `${minutes}分`;
 
           return `・${conflictType}: "${conflictingTask.name}" (${conflictStart}開始, ${durationText}) - ${overlapType}`;
         })
-        .join("\n");
+        .join('\n');
 
       const summary =
         conflictResult.conflictingTasks.length === 1
-          ? "1つのタスクと重複"
+          ? '1つのタスクと重複'
           : `${conflictResult.conflictingTasks.length}つのタスクと重複`;
 
       alert(
-        `タスクの時間が重複しています (${summary}):\n\n${conflictMessages}\n\n別の時間帯または行に配置してください。`,
+        `タスクの時間が重複しています (${summary}):\n\n${conflictMessages}\n\n別の時間帯または行に配置してください。`
       );
       return;
     }
@@ -259,14 +259,14 @@ function App() {
     const workEndMinutes = timeToMinutes(workingHours.end);
 
     if (startMinutes < workStartMinutes || endMinutes > workEndMinutes) {
-      alert("業務時間外には配置できません");
+      alert('業務時間外には配置できません');
       return;
     }
 
     setTasks(
       tasks.map((t) =>
-        t.id === taskId ? { ...t, position: { row, startTime } } : t,
-      ),
+        t.id === taskId ? { ...t, position: { row, startTime } } : t
+      )
     );
   };
 
@@ -277,8 +277,8 @@ function App() {
   const handleTaskDropToPool = (taskId: string) => {
     setTasks(
       tasks.map((task) =>
-        task.id === taskId ? { ...task, position: null } : task,
-      ),
+        task.id === taskId ? { ...task, position: null } : task
+      )
     );
   };
 
