@@ -423,7 +423,7 @@ describe('TaskSettings Component', () => {
       );
 
       const durationSlider = screen.getByRole('slider');
-      
+
       // Verify slider attributes
       expect(durationSlider.getAttribute('min')).toBe('1');
       expect(durationSlider.getAttribute('max')).toBe('16');

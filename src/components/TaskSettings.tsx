@@ -65,8 +65,17 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
       </div>
 
       {/* Task name input field */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
-        <label htmlFor="task-name" style={{ flexShrink: 0 }}>タスク名: </label>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        <label htmlFor="task-name" style={{ flexShrink: 0 }}>
+          タスク名:{' '}
+        </label>
         <input
           id="task-name"
           value={task.name}
@@ -75,14 +84,27 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
             onUpdateTask({ ...task, name: e.target.value })
           }
           aria-label="Edit task name"
-          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          style={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
         />
       </div>
 
       {/* Task duration selection */}
       <div>
-        <label htmlFor="task-duration" style={{ flexShrink: 0 }}>工数: </label>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
+        <label htmlFor="task-duration" style={{ flexShrink: 0 }}>
+          工数:{' '}
+        </label>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            whiteSpace: 'nowrap',
+          }}
+        >
           <input
             id="task-duration"
             type="range"
