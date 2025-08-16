@@ -3,6 +3,12 @@
  * 時間変換、タイムスロット生成、業務時間計算などを提供
  */
 
+import {
+  TIME_SLOT_INCREMENT_MINUTES,
+  MINUTES_PER_HOUR,
+  TIME_STRING_PADDING_LENGTH,
+} from '../constants';
+
 /**
  * HH:MM形式の時間文字列を分単位の数値に変換
  * @param timeStr "09:30" 形式の時間文字列
@@ -11,7 +17,7 @@
  */
 export const timeToMinutes = (timeStr: string): number => {
   const [hours, minutes] = timeStr.split(':').map(Number);
-  return hours * 60 + minutes;
+  return hours * MINUTES_PER_HOUR + minutes;
 };
 
 /**
@@ -21,9 +27,9 @@ export const timeToMinutes = (timeStr: string): number => {
  * @example minutesToTime(870) // returns '14:30'
  */
 export const minutesToTime = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  const hours = Math.floor(minutes / MINUTES_PER_HOUR);
+  const mins = minutes % MINUTES_PER_HOUR;
+  return `${hours.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}:${mins.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}`;
 };
 
 /**
@@ -41,7 +47,11 @@ export const generateTimeSlots = (
   const endMinutes = timeToMinutes(endTime);
   const slots: string[] = [];
 
-  for (let minutes = startMinutes; minutes < endMinutes; minutes += 15) {
+  for (
+    let minutes = startMinutes;
+    minutes < endMinutes;
+    minutes += TIME_SLOT_INCREMENT_MINUTES
+  ) {
     slots.push(minutesToTime(minutes));
   }
 
@@ -57,9 +67,9 @@ export const generateTimeSlots = (
  * @example formatDuration(5) // returns '1時間15分'
  */
 export const formatDuration = (duration: number): string => {
-  const totalMinutes = duration * 15;
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+  const totalMinutes = duration * TIME_SLOT_INCREMENT_MINUTES;
+  const hours = Math.floor(totalMinutes / MINUTES_PER_HOUR);
+  const minutes = totalMinutes % MINUTES_PER_HOUR;
 
   if (hours > 0 && minutes > 0) {
     return `${hours}時間${minutes}分`;
@@ -85,7 +95,7 @@ export const isWithinWorkingHours = (
   workingEnd: string
 ): boolean => {
   const startMinutes = timeToMinutes(startTime);
-  const endMinutes = startMinutes + duration * 15;
+  const endMinutes = startMinutes + duration * TIME_SLOT_INCREMENT_MINUTES;
   const workStartMinutes = timeToMinutes(workingStart);
   const workEndMinutes = timeToMinutes(workingEnd);
 

@@ -4,6 +4,7 @@ import { Timeline } from './components/Timeline';
 import { TaskSettings } from './components/TaskSettings';
 import { TaskCreator, TaskPool } from './components/TaskPool';
 import { useTasks } from './hooks/useTasks';
+import { DEFAULT_WORKING_HOURS } from './constants';
 import './App.css';
 
 /**
@@ -13,8 +14,8 @@ import './App.css';
 function App() {
   // 業務時間の設定（開始・終了時刻）
   const workingHours: WorkingHours = {
-    start: '09:00',
-    end: '18:00',
+    start: DEFAULT_WORKING_HOURS.START,
+    end: DEFAULT_WORKING_HOURS.END,
   };
 
   // カスタムフックでタスク管理ロジックを分離

@@ -4,6 +4,7 @@ import { TaskCard } from './TaskCard';
 import { generateTimeSlots } from '../utils/timeUtils';
 import { TimelineUtils } from '../utils/timelineUtils';
 import { ConflictService } from '../services/conflictService';
+import { MAX_TIMELINE_ROWS } from '../constants';
 import './Timeline.css';
 
 /**
@@ -49,7 +50,7 @@ export const Timeline = ({
    * Defines the maximum number of tasks that can be displayed simultaneously
    */
   const timeSlots = generateTimeSlots(workingHours.start, workingHours.end);
-  const timelineRows = 5; // Maximum 5 rows for task placement
+  const timelineRows = MAX_TIMELINE_ROWS; // Maximum rows for task placement
 
   /**
    * Handles the drag over event for timeline slots

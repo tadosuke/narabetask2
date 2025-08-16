@@ -1,5 +1,10 @@
 import type { Task } from '../types';
 import { timeToMinutes } from './timeUtils';
+import {
+  TIME_SLOT_INCREMENT_MINUTES,
+  MINUTES_PER_HOUR,
+  TIME_STRING_PADDING_LENGTH,
+} from '../constants';
 
 /**
  * タイムライン関連のユーティリティ関数集
@@ -24,7 +29,7 @@ export class TimelineUtils {
 
         // タスクの時間範囲内かチェック
         const taskStart = timeToMinutes(task.position.startTime);
-        const taskEnd = taskStart + task.duration * 15;
+        const taskEnd = taskStart + task.duration * TIME_SLOT_INCREMENT_MINUTES;
         const slotTime = timeToMinutes(timeSlot);
 
         return slotTime >= taskStart && slotTime < taskEnd;
@@ -56,10 +61,14 @@ export class TimelineUtils {
         if (!task.position) return;
 
         const taskStart = timeToMinutes(task.position.startTime);
-        const taskEnd = taskStart + task.duration * 15;
+        const taskEnd = taskStart + task.duration * TIME_SLOT_INCREMENT_MINUTES;
 
         // タスクが占有する各15分スロットに追加
-        for (let time = taskStart; time < taskEnd; time += 15) {
+        for (
+          let time = taskStart;
+          time < taskEnd;
+          time += TIME_SLOT_INCREMENT_MINUTES
+        ) {
           const timeSlot = this.minutesToTime(time);
           if (!map.has(timeSlot)) {
             map.set(timeSlot, []);
@@ -75,8 +84,8 @@ export class TimelineUtils {
    * 分を時刻文字列に変換（内部ヘルパー）
    */
   private static minutesToTime(minutes: number): string {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    const hours = Math.floor(minutes / MINUTES_PER_HOUR);
+    const mins = minutes % MINUTES_PER_HOUR;
+    return `${hours.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}:${mins.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}`;
   }
 }

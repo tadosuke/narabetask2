@@ -1,5 +1,11 @@
 import type { Task } from '../types';
 import { timeToMinutes, formatDuration } from '../utils/timeUtils';
+import {
+  TIME_SLOT_INCREMENT_MINUTES,
+  DISPLAY_INDEX_OFFSET,
+  SINGLE_TASK_COUNT,
+  CONFLICT_THRESHOLD,
+} from '../constants';
 
 /**
  * 重複エラーメッセージの生成サービス
@@ -27,7 +33,7 @@ export class ConflictService {
       .join('\n');
 
     const summary =
-      conflictingTasks.length === 1
+      conflictingTasks.length === SINGLE_TASK_COUNT
         ? '1つのタスクと重複'
         : `${conflictingTasks.length}つのタスクと重複`;
 
@@ -47,7 +53,7 @@ export class ConflictService {
       if (!task.position) return false;
 
       const taskStart = timeToMinutes(task.position.startTime);
-      const taskEnd = taskStart + task.duration * 15;
+      const taskEnd = taskStart + task.duration * TIME_SLOT_INCREMENT_MINUTES;
 
       return slotTime >= taskStart && slotTime < taskEnd;
     });
@@ -61,7 +67,7 @@ export class ConflictService {
    */
   static hasTimeSlotConflict(tasks: Task[], timeSlot: string): boolean {
     const tasksInSlot = this.getTasksInTimeSlot(tasks, timeSlot);
-    return tasksInSlot.length > 1;
+    return tasksInSlot.length > CONFLICT_THRESHOLD;
   }
 
   /**
@@ -77,7 +83,10 @@ export class ConflictService {
 
     const conflictingTasks = this.getTasksInTimeSlot(tasks, timeSlot);
     return `Conflict detected: ${conflictingTasks
-      .map((task) => `"${task.name}" (Row ${task.position!.row + 1})`)
+      .map(
+        (task) =>
+          `"${task.name}" (Row ${task.position!.row + DISPLAY_INDEX_OFFSET})`
+      )
       .join(', ')}`;
   }
 }
