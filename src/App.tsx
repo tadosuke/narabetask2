@@ -294,7 +294,7 @@ function App() {
       </header>
 
       <div className="app-content">
-        {/* 上部：タイムライン（横スクロール可能） */}
+        {/* Top: Timeline (horizontal scrollable) */}
         <div className="timeline-section">
           <Timeline
             tasks={tasks}
@@ -304,25 +304,28 @@ function App() {
           />
         </div>
 
-        {/* 中部：タスク置き場 */}
-        <div className="task-section">
-          <div className="task-creator-area">
-            <TaskCreator onCreateTask={handleCreateTask} />
+        {/* Bottom: Two-column layout for Task Pool and Settings */}
+        <div className="two-column-section">
+          {/* Left column: Task Pool */}
+          <div className="task-section">
+            <div className="task-creator-area">
+              <TaskCreator onCreateTask={handleCreateTask} />
+            </div>
+            <TaskPool
+              tasks={tasks}
+              onTaskClick={handleSelectTask}
+              onTaskDrop={handleTaskDropToPool}
+            />
           </div>
-          <TaskPool
-            tasks={tasks}
-            onTaskClick={handleSelectTask}
-            onTaskDrop={handleTaskDropToPool}
-          />
-        </div>
 
-        {/* 下部：タスク設定 */}
-        <div className="settings-section">
-          <TaskSettings
-            task={selectedTask}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-          />
+          {/* Right column: Task Settings */}
+          <div className="settings-section">
+            <TaskSettings
+              task={selectedTask}
+              onUpdateTask={handleUpdateTask}
+              onDeleteTask={handleDeleteTask}
+            />
+          </div>
         </div>
       </div>
     </div>
