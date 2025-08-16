@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Task } from '../types';
+import './TaskSettings.css';
 
 /**
  * Props interface for the TaskSettings component

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { Task, WorkingHours } from '../types';
 import { TaskCard } from './TaskCard';
+import './Timeline.css';
 
 /**
  * Props interface for the Timeline component

@@ -13,5 +13,5 @@
 
 ## ショートカットコマンド
 
-- `in bg` → バックグラウンドで実行する
-- `in sim` → 並列で実行する
+- `--bg` → `in the background`
+- `--par` → `in parallel`

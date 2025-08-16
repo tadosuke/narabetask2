@@ -1,4 +1,5 @@
 import type { Task } from '../types';
+import './TaskCard.css';
 
 /**
  * Props interface for the TaskCard component
