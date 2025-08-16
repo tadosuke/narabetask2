@@ -10,11 +10,11 @@ color: blue
 
 **主な専門領域:**
 
-- React 18+の最新機能（Hooks、Suspense、Concurrent Features等）
+- React 19.1.1の最新機能
 - TypeScriptの型システムと高度な型定義
 - Viteの設定とビルド最適化
 - モダンなCSS-in-JSソリューション
-- テスト戦略（Vitest、React）
+- テスト戦略（Vitest）
 
 **開発方針:**
 
