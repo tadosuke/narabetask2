@@ -57,7 +57,7 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
           marginBottom: '1rem',
         }}
       >
-        <h3 style={{ margin: 0 }}>Task Settings</h3>
+        <h3 style={{ margin: 0 }}>タスク設定</h3>
         {/* Delete task button */}
         <button onClick={() => onDeleteTask(task.id)} aria-label="Delete task">
           <span className="material-icons">delete</span>
@@ -66,7 +66,7 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
 
       {/* Task name input field */}
       <div>
-        <label htmlFor="task-name">Task Name: </label>
+        <label htmlFor="task-name">タスク名: </label>
         <input
           id="task-name"
           value={task.name}
@@ -80,7 +80,7 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
 
       {/* Task duration selection */}
       <div>
-        <label htmlFor="task-duration">Estimated Time: </label>
+        <label htmlFor="task-duration">工数: </label>
         <select
           id="task-duration"
           value={task.duration}
@@ -91,10 +91,10 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
           aria-label="Select task duration"
         >
           {/* Duration options in minutes */}
-          <option value={1}>15 minutes</option>
-          <option value={2}>30 minutes</option>
-          <option value={3}>45 minutes</option>
-          <option value={4}>1 hour</option>
+          <option value={1}>15 分</option>
+          <option value={2}>30 分</option>
+          <option value={3}>45 分</option>
+          <option value={4}>1 時間</option>
         </select>
       </div>
     </div>

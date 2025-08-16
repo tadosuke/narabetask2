@@ -51,19 +51,19 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      // Should render the main heading
-      expect(screen.getByText('Task Settings')).toBeDefined();
+      // Should render task name input with correct value
+      const nameInput = screen.getByRole('textbox');
+      expect(nameInput).toBeDefined();
+      expect((nameInput as HTMLInputElement).value).toBe('Test Task');
 
-      // Should render task name label and input
-      expect(screen.getByText('Task Name:')).toBeDefined();
-      expect(screen.getByDisplayValue('Test Task')).toBeDefined();
-
-      // Should render duration label and select
-      expect(screen.getByText('Estimated Time:')).toBeDefined();
-      expect(screen.getByDisplayValue('30 minutes')).toBeDefined();
+      // Should render duration select with correct numerical value
+      const durationSelect = screen.getByRole('combobox');
+      expect(durationSelect).toBeDefined();
+      expect((durationSelect as HTMLSelectElement).value).toBe('2'); // 2 = 30 minutes
 
       // Should render delete button
-      expect(screen.getByLabelText('Delete task')).toBeDefined();
+      const deleteButton = screen.getByRole('button');
+      expect(deleteButton).toBeDefined();
     });
 
     it('should render correctly with task that has position', () => {
@@ -78,8 +78,11 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      expect(screen.getByDisplayValue('Scheduled Task')).toBeDefined();
-      expect(screen.getByDisplayValue('1 hour')).toBeDefined();
+      const nameInput = screen.getByRole('textbox');
+      expect((nameInput as HTMLInputElement).value).toBe('Scheduled Task');
+      
+      const durationSelect = screen.getByRole('combobox');
+      expect((durationSelect as HTMLSelectElement).value).toBe('4'); // 4 = 60 minutes
     });
   });
 
@@ -180,9 +183,9 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByDisplayValue('30 minutes');
+      const durationSelect = screen.getByRole('combobox');
       expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('2');
+      expect((durationSelect as HTMLSelectElement).value).toBe('2'); // Current task duration is 2 (30 minutes)
     });
 
     it('should display all available duration options', () => {
@@ -197,11 +200,15 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      // Check that all duration options are present
-      expect(screen.getByText('15 minutes')).toBeDefined();
-      expect(screen.getByText('30 minutes')).toBeDefined();
-      expect(screen.getByText('45 minutes')).toBeDefined();
-      expect(screen.getByText('1 hour')).toBeDefined();
+      // Check that all numerical duration options are present
+      const durationSelect = screen.getByRole('combobox');
+      const options = Array.from(durationSelect.querySelectorAll('option'));
+      
+      expect(options).toHaveLength(4);
+      expect(options[0].value).toBe('1'); // 15 minutes
+      expect(options[1].value).toBe('2'); // 30 minutes  
+      expect(options[2].value).toBe('3'); // 45 minutes
+      expect(options[3].value).toBe('4'); // 1 hour
     });
 
     it('should call onUpdateTask when duration is changed', () => {
@@ -216,7 +223,7 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByDisplayValue('30 minutes');
+      const durationSelect = screen.getByRole('combobox');
       fireEvent.change(durationSelect, { target: { value: '4' } });
 
       expect(mockOnUpdateTask).toHaveBeenCalledTimes(1);
@@ -238,7 +245,7 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByDisplayValue('30 minutes');
+      const durationSelect = screen.getByRole('combobox');
 
       // Test each duration option
       const durationOptions = [
@@ -329,8 +336,8 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const nameLabel = screen.getByText('Task Name:');
-      const nameInput = screen.getByDisplayValue('Test Task');
+      const nameInput = screen.getByRole('textbox');
+      const nameLabel = nameInput.labels?.[0] || screen.getByLabelText(/task name/i);
 
       expect(nameLabel.getAttribute('for')).toBe('task-name');
       expect(nameInput.getAttribute('id')).toBe('task-name');
@@ -349,8 +356,8 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationLabel = screen.getByText('Estimated Time:');
-      const durationSelect = screen.getByDisplayValue('30 minutes');
+      const durationSelect = screen.getByRole('combobox');
+      const durationLabel = durationSelect.labels?.[0] || screen.getByLabelText(/task duration/i);
 
       expect(durationLabel.getAttribute('for')).toBe('task-duration');
       expect(durationSelect.getAttribute('id')).toBe('task-duration');
@@ -376,6 +383,117 @@ describe('TaskSettings Component', () => {
     });
   });
 
+  describe('Numerical Duration Validation', () => {
+    it('should correctly handle duration value to time conversion', () => {
+      const mockOnUpdateTask = vi.fn();
+      const mockOnDeleteTask = vi.fn();
+      
+      // Test all duration values and their numeric representations
+      const durationTests = [
+        { duration: 1, expectedValue: '1' }, // 15 minutes
+        { duration: 2, expectedValue: '2' }, // 30 minutes  
+        { duration: 3, expectedValue: '3' }, // 45 minutes
+        { duration: 4, expectedValue: '4' }, // 1 hour
+      ];
+
+      durationTests.forEach(({ duration, expectedValue }) => {
+        const testTask = { ...mockTask, duration };
+        
+        const { unmount } = render(
+          <TaskSettings
+            task={testTask}
+            onUpdateTask={mockOnUpdateTask}
+            onDeleteTask={mockOnDeleteTask}
+          />
+        );
+
+        const durationSelect = screen.getByRole('combobox');
+        expect((durationSelect as HTMLSelectElement).value).toBe(expectedValue);
+        
+        unmount();
+      });
+    });
+
+    it('should validate duration boundaries', () => {
+      const mockOnUpdateTask = vi.fn();
+      const mockOnDeleteTask = vi.fn();
+
+      render(
+        <TaskSettings
+          task={mockTask}
+          onUpdateTask={mockOnUpdateTask}
+          onDeleteTask={mockOnDeleteTask}
+        />
+      );
+
+      const durationSelect = screen.getByRole('combobox');
+      const options = Array.from(durationSelect.querySelectorAll('option'));
+      
+      // Verify we have exactly 4 options
+      expect(options).toHaveLength(4);
+      
+      // Verify numeric values are sequential from 1 to 4
+      const values = options.map(option => parseInt(option.value));
+      expect(values).toEqual([1, 2, 3, 4]);
+      
+      // Verify no values outside the valid range
+      expect(values.every(val => val >= 1 && val <= 4)).toBe(true);
+    });
+
+    it('should handle duration changes with proper numeric conversion', () => {
+      const mockOnUpdateTask = vi.fn();
+      const mockOnDeleteTask = vi.fn();
+
+      render(
+        <TaskSettings
+          task={mockTask}
+          onUpdateTask={mockOnUpdateTask}
+          onDeleteTask={mockOnDeleteTask}
+        />
+      );
+
+      const durationSelect = screen.getByRole('combobox');
+      
+      // Change to duration 1 and verify numeric conversion
+      fireEvent.change(durationSelect, { target: { value: '1' } });
+      expect(mockOnUpdateTask).toHaveBeenCalledWith({
+        ...mockTask,
+        duration: 1, // Should be a number, not string
+      });
+
+      // Change to duration 4 and verify numeric conversion
+      fireEvent.change(durationSelect, { target: { value: '4' } });
+      expect(mockOnUpdateTask).toHaveBeenCalledWith({
+        ...mockTask,
+        duration: 4, // Should be a number, not string
+      });
+    });
+
+    it('should maintain duration value type consistency', () => {
+      const mockOnUpdateTask = vi.fn();
+      const mockOnDeleteTask = vi.fn();
+
+      render(
+        <TaskSettings
+          task={mockTask}
+          onUpdateTask={mockOnUpdateTask}
+          onDeleteTask={mockOnDeleteTask}
+        />
+      );
+
+      const durationSelect = screen.getByRole('combobox');
+      
+      ['1', '2', '3', '4'].forEach(value => {
+        fireEvent.change(durationSelect, { target: { value } });
+        const lastCall = mockOnUpdateTask.mock.calls[mockOnUpdateTask.mock.calls.length - 1];
+        
+        // Verify duration is always passed as a number
+        expect(typeof lastCall[0].duration).toBe('number');
+        expect(lastCall[0].duration).toBe(parseInt(value));
+      });
+    });
+  });
+
   describe('Edge Cases and Error Handling', () => {
     it('should handle task with empty name gracefully', () => {
       const mockOnUpdateTask = vi.fn();
@@ -392,7 +510,8 @@ describe('TaskSettings Component', () => {
         );
       }).not.toThrow();
 
-      const nameInput = screen.getByDisplayValue('');
+      const nameInput = screen.getByRole('textbox');
+      expect((nameInput as HTMLInputElement).value).toBe('');
       expect(nameInput).toBeDefined();
     });
 
@@ -438,7 +557,7 @@ describe('TaskSettings Component', () => {
       // Reset mock
       mockOnUpdateTask.mockClear();
 
-      const durationSelect = screen.getByDisplayValue('1 hour');
+      const durationSelect = screen.getByRole('combobox');
       fireEvent.change(durationSelect, { target: { value: '2' } });
 
       expect(mockOnUpdateTask).toHaveBeenCalledWith({
@@ -460,9 +579,9 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByDisplayValue('15 minutes');
+      const durationSelect = screen.getByRole('combobox');
       expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('1');
+      expect((durationSelect as HTMLSelectElement).value).toBe('1'); // Minimum duration value
     });
 
     it('should handle maximum duration value (4)', () => {
@@ -478,9 +597,9 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByDisplayValue('1 hour');
+      const durationSelect = screen.getByRole('combobox');
       expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('4');
+      expect((durationSelect as HTMLSelectElement).value).toBe('4'); // Maximum duration value
     });
   });
 
