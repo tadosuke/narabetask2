@@ -84,11 +84,6 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
             onUpdateTask({ ...task, name: e.target.value })
           }
           aria-label="Edit task name"
-          style={{
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
         />
       </div>
 

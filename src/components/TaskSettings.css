@@ -66,6 +66,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: none;
+  line-height: 2em;
 }
 
 #task-duration {
