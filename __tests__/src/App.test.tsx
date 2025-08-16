@@ -27,27 +27,27 @@ describe("App コンポーネント", () => {
   it("タスク作成ボタンクリックで新しいタスクが追加されることを確認", () => {
     render(<App />);
     const createButton = screen.getByRole("button", { name: "タスク作成" });
-    
+
     // 初期状態でタスクがないことを確認
     expect(screen.queryByText("タスク 1")).toBeNull();
-    
+
     // タスク作成ボタンをクリック
     fireEvent.click(createButton);
-    
+
     // タスクが作成されたことを確認
     expect(screen.getByText("タスク 1")).toBeDefined();
   });
 
   it("3段レイアウト構造が正しく適用されていることを確認", () => {
     render(<App />);
-    
+
     // 各セクションが存在することを確認
-    const timelineSection = document.querySelector('.timeline-section');
-    const taskSection = document.querySelector('.task-section');
-    const settingsSection = document.querySelector('.settings-section');
-    
+    const timelineSection = document.querySelector(".timeline-section");
+    const taskSection = document.querySelector(".task-section");
+    const settingsSection = document.querySelector(".settings-section");
+
     expect(timelineSection).toBeDefined();
-    expect(taskSection).toBeDefined(); 
+    expect(taskSection).toBeDefined();
     expect(settingsSection).toBeDefined();
   });
 });

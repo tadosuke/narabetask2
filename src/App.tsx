@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Task, WorkingHours } from "./types";
 import { TaskCard } from "./components/TaskCard";
 import { Timeline } from "./components/Timeline";
@@ -53,7 +53,6 @@ const TaskPool = ({
   );
 };
 
-
 /**
  * メインアプリケーションコンポーネント
  * タスクの作成・編集・スケジューリング機能を提供
@@ -94,18 +93,36 @@ function App() {
    */
   const handleUpdateTask = (updatedTask: Task) => {
     setTasks(
-      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+      tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)),
     );
   };
-
 
   /**
    * タスクを削除する
    */
-  const handleDeleteTask = (taskId: string) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
-    setSelectedTaskId(null);
-  };
+  const handleDeleteTask = useCallback(
+    (taskId: string) => {
+      setTasks(tasks.filter((task) => task.id !== taskId));
+      setSelectedTaskId(null);
+    },
+    [tasks],
+  );
+
+  /**
+   * Delete key handler for deleting selected tasks
+   */
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Delete" && selectedTaskId) {
+        handleDeleteTask(selectedTaskId);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedTaskId, handleDeleteTask]);
 
   /**
    * 時間をHH:MM形式から分単位に変換
@@ -129,7 +146,7 @@ function App() {
     taskId: string,
     row: number,
     startTime: string,
-    duration: number
+    duration: number,
   ): {
     hasConflict: boolean;
     conflictingTasks: Array<{
@@ -194,7 +211,7 @@ function App() {
   const handleTaskDropToTimeline = (
     taskId: string,
     row: number,
-    startTime: string
+    startTime: string,
   ) => {
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
@@ -204,7 +221,7 @@ function App() {
       taskId,
       row,
       startTime,
-      task.duration
+      task.duration,
     );
 
     if (conflictResult.hasConflict) {
@@ -229,11 +246,9 @@ function App() {
           ? "1つのタスクと重複"
           : `${conflictResult.conflictingTasks.length}つのタスクと重複`;
 
-      alert(`タスクの時間が重複しています (${summary}):
-
-${conflictMessages}
-
-別の時間帯または行に配置してください。`);
+      alert(
+        `タスクの時間が重複しています (${summary}):\n\n${conflictMessages}\n\n別の時間帯または行に配置してください。`,
+      );
       return;
     }
 
@@ -250,8 +265,8 @@ ${conflictMessages}
 
     setTasks(
       tasks.map((t) =>
-        t.id === taskId ? { ...t, position: { row, startTime } } : t
-      )
+        t.id === taskId ? { ...t, position: { row, startTime } } : t,
+      ),
     );
   };
 
@@ -262,8 +277,8 @@ ${conflictMessages}
   const handleTaskDropToPool = (taskId: string) => {
     setTasks(
       tasks.map((task) =>
-        task.id === taskId ? { ...task, position: null } : task
-      )
+        task.id === taskId ? { ...task, position: null } : task,
+      ),
     );
   };
 

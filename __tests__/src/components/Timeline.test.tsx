@@ -31,8 +31,6 @@ const mockTaskInPool: Task = {
   position: null,
 };
 
-
-
 describe("Timeline コンポーネント", () => {
   describe("基本レンダリング", () => {
     it("コンポーネントが正しくレンダリングされることを確認", () => {
@@ -45,7 +43,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText(/タイムライン/)).toBeDefined();
@@ -61,7 +59,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText("タイムライン (09:00 - 12:00)")).toBeDefined();
@@ -77,7 +75,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const timeline = document.querySelector(".timeline");
@@ -101,7 +99,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       // 09:00-12:00 = 3時間 = 12スロット（15分刻み）
@@ -111,7 +109,7 @@ describe("Timeline コンポーネント", () => {
       expect(screen.getByText("09:45")).toBeDefined();
       expect(screen.getByText("10:00")).toBeDefined();
       expect(screen.getByText("11:45")).toBeDefined();
-      
+
       // 12:00は終了時間なので含まれない
       expect(() => screen.getByText("12:00")).toThrow();
     });
@@ -126,7 +124,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHoursLong}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText("08:00")).toBeDefined();
@@ -146,7 +144,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const timelineRows = document.querySelectorAll(".timeline-row");
@@ -163,7 +161,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const timelineRows = document.querySelectorAll(".timeline-row");
@@ -182,7 +180,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText("配置済みタスク")).toBeDefined();
@@ -198,7 +196,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(() => screen.getByText("未配置タスク")).toThrow();
@@ -228,7 +226,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText("タスク1")).toBeDefined();
@@ -252,11 +250,11 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText("長時間タスク")).toBeDefined();
-      
+
       // タスクカードは開始時刻のスロットにのみ表示されるべき
       const taskCards = screen.getAllByText("長時間タスク");
       expect(taskCards.length).toBe(1);
@@ -274,7 +272,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const timelineSlots = document.querySelectorAll(".timeline-slot");
@@ -285,12 +283,14 @@ describe("Timeline コンポーネント", () => {
         dropEffect: "",
       };
 
-      const dragOverEvent = new Event("dragover", { bubbles: true }) as DragEvent;
+      const dragOverEvent = new Event("dragover", {
+        bubbles: true,
+      }) as DragEvent;
       dragOverEvent.dataTransfer = mockDataTransfer;
       dragOverEvent.preventDefault = vi.fn();
 
       fireEvent(firstSlot, dragOverEvent);
-      
+
       // preventDefault が呼ばれることを確認
       expect(dragOverEvent.preventDefault).toHaveBeenCalled();
       // dropEffect が "move" に設定されることを確認
@@ -307,7 +307,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const timelineSlots = document.querySelectorAll(".timeline-slot");
@@ -331,7 +331,11 @@ describe("Timeline コンポーネント", () => {
       fireEvent(firstSlot, dropEvent);
 
       expect(mockDataTransfer.getData).toHaveBeenCalledWith("text/plain");
-      expect(mockOnTaskDrop).toHaveBeenCalledWith("dropped-task-id", 0, "09:00");
+      expect(mockOnTaskDrop).toHaveBeenCalledWith(
+        "dropped-task-id",
+        0,
+        "09:00",
+      );
     });
 
     it("異なる行・時間へのドロップが正しく処理されることを確認", () => {
@@ -344,7 +348,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const timelineSlots = document.querySelectorAll(".timeline-slot");
@@ -386,7 +390,7 @@ describe("Timeline コンポーネント", () => {
           position: { row: 0, startTime: "10:00" },
         },
         {
-          id: "conflict-2", 
+          id: "conflict-2",
           name: "競合タスク2",
           duration: 1,
           position: { row: 1, startTime: "10:00" }, // 同じ時刻、異なる行
@@ -399,11 +403,13 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       // 競合インジケーターの存在確認
-      const conflictIndicators = document.querySelectorAll(".conflict-indicator");
+      const conflictIndicators = document.querySelectorAll(
+        ".conflict-indicator",
+      );
       expect(conflictIndicators.length).toBeGreaterThan(0);
     });
 
@@ -420,7 +426,7 @@ describe("Timeline コンポーネント", () => {
         },
         {
           id: "task-2",
-          name: "タスク2", 
+          name: "タスク2",
           duration: 1,
           position: { row: 1, startTime: "09:15" }, // 異なる時刻
         },
@@ -432,10 +438,12 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
-      const conflictIndicators = document.querySelectorAll(".conflict-indicator");
+      const conflictIndicators = document.querySelectorAll(
+        ".conflict-indicator",
+      );
       expect(conflictIndicators.length).toBe(0);
     });
   });
@@ -451,7 +459,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const taskCard = screen.getByText("配置済みタスク").closest(".task-card");
@@ -475,7 +483,7 @@ describe("Timeline コンポーネント", () => {
             workingHours={mockWorkingHours}
             onTaskClick={mockOnTaskClick}
             onTaskDrop={mockOnTaskDrop}
-          />
+          />,
         );
       }).not.toThrow();
     });
@@ -495,7 +503,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={shortHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       expect(screen.getByText("09:00")).toBeDefined();
@@ -520,7 +528,7 @@ describe("Timeline コンポーネント", () => {
             workingHours={mockWorkingHours}
             onTaskClick={mockOnTaskClick}
             onTaskDrop={mockOnTaskDrop}
-          />
+          />,
         );
       }).not.toThrow();
     });
@@ -543,7 +551,7 @@ describe("Timeline コンポーネント", () => {
             workingHours={mockWorkingHours}
             onTaskClick={mockOnTaskClick}
             onTaskDrop={mockOnTaskDrop}
-          />
+          />,
         );
       }).not.toThrow();
     });
@@ -566,7 +574,7 @@ describe("Timeline コンポーネント", () => {
             workingHours={mockWorkingHours}
             onTaskClick={mockOnTaskClick}
             onTaskDrop={mockOnTaskDrop}
-          />
+          />,
         );
       }).not.toThrow();
     });
@@ -583,7 +591,7 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const emptySlots = document.querySelectorAll(".timeline-slot.empty");
@@ -600,10 +608,12 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
-      const occupiedSlots = document.querySelectorAll(".timeline-slot.occupied");
+      const occupiedSlots = document.querySelectorAll(
+        ".timeline-slot.occupied",
+      );
       expect(occupiedSlots.length).toBeGreaterThan(0);
     });
 
@@ -632,10 +642,12 @@ describe("Timeline コンポーネント", () => {
           workingHours={mockWorkingHours}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
-      const conflictSlots = document.querySelectorAll(".timeline-slot.conflict");
+      const conflictSlots = document.querySelectorAll(
+        ".timeline-slot.conflict",
+      );
       expect(conflictSlots.length).toBeGreaterThan(0);
     });
   });
@@ -654,20 +666,23 @@ describe("Timeline コンポーネント", () => {
           duration: 1,
           position: {
             row: i % 5,
-            startTime: `${9 + Math.floor(i / 20)}:${(i % 4) * 15}`.padStart(5, "0"),
+            startTime: `${9 + Math.floor(i / 20)}:${(i % 4) * 15}`.padStart(
+              5,
+              "0",
+            ),
           },
         });
       }
 
       const startTime = performance.now();
-      
+
       render(
         <Timeline
           tasks={manyTasks}
           workingHours={mockWorkingHoursLong}
           onTaskClick={mockOnTaskClick}
           onTaskDrop={mockOnTaskDrop}
-        />
+        />,
       );
 
       const endTime = performance.now();

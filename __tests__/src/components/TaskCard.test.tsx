@@ -29,13 +29,8 @@ describe("TaskCard コンポーネント", () => {
   describe("基本レンダリング", () => {
     it("タスクカードが正しくレンダリングされることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       // コンポーネントが存在することを確認
       const taskCard = document.querySelector(".task-card");
@@ -44,13 +39,8 @@ describe("TaskCard コンポーネント", () => {
 
     it("draggable属性が設定されていることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
       expect(taskCard?.getAttribute("draggable")).toBe("true");
@@ -58,13 +48,8 @@ describe("TaskCard コンポーネント", () => {
 
     it("基本のCSSクラス名が適用されていることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
       expect(taskCard?.className).toBe("task-card ");
@@ -74,26 +59,16 @@ describe("TaskCard コンポーネント", () => {
   describe("タスク情報の表示", () => {
     it("タスク名が正しく表示されることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       expect(screen.getByText("テストタスク")).toBeDefined();
     });
 
     it("継続時間が15分単位で正しく計算表示されることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       // duration: 2 → 2 × 15 = 30分
       expect(screen.getByText("30分")).toBeDefined();
@@ -101,12 +76,9 @@ describe("TaskCard コンポーネント", () => {
 
     it("長時間タスクの継続時間が正しく表示されることを確認", () => {
       const mockOnClick = vi.fn();
-      
+
       render(
-        <TaskCard 
-          task={mockTaskWithLongDuration} 
-          onClick={mockOnClick} 
-        />
+        <TaskCard task={mockTaskWithLongDuration} onClick={mockOnClick} />,
       );
 
       // duration: 8 → 8 × 15 = 120分
@@ -115,12 +87,9 @@ describe("TaskCard コンポーネント", () => {
 
     it("短時間タスクの継続時間が正しく表示されることを確認", () => {
       const mockOnClick = vi.fn();
-      
+
       render(
-        <TaskCard 
-          task={mockTaskWithShortDuration} 
-          onClick={mockOnClick} 
-        />
+        <TaskCard task={mockTaskWithShortDuration} onClick={mockOnClick} />,
       );
 
       // duration: 1 → 1 × 15 = 15分
@@ -131,13 +100,9 @@ describe("TaskCard コンポーネント", () => {
   describe("isDraggingプロパティの動作", () => {
     it("isDraggingがfalseの時、draggingクラスが適用されないことを確認", () => {
       const mockOnClick = vi.fn();
-      
+
       render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-          isDragging={false}
-        />
+        <TaskCard task={mockTask} onClick={mockOnClick} isDragging={false} />,
       );
 
       const taskCard = document.querySelector(".task-card");
@@ -146,13 +111,9 @@ describe("TaskCard コンポーネント", () => {
 
     it("isDraggingがtrueの時、draggingクラスが適用されることを確認", () => {
       const mockOnClick = vi.fn();
-      
+
       render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-          isDragging={true}
-        />
+        <TaskCard task={mockTask} onClick={mockOnClick} isDragging={true} />,
       );
 
       const taskCard = document.querySelector(".task-card");
@@ -161,13 +122,8 @@ describe("TaskCard コンポーネント", () => {
 
     it("isDraggingが未指定の時、draggingクラスが適用されないことを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
       expect(taskCard?.className).toBe("task-card ");
@@ -177,13 +133,8 @@ describe("TaskCard コンポーネント", () => {
   describe("onClickイベントハンドラー", () => {
     it("タスクカードをクリックした時にonClickが正しいタスクIDで呼ばれることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
       if (taskCard) {
@@ -197,13 +148,8 @@ describe("TaskCard コンポーネント", () => {
     it("異なるタスクIDでonClickが正しく動作することを確認", () => {
       const mockOnClick = vi.fn();
       const differentTask = { ...mockTask, id: "different-task-id" };
-      
-      render(
-        <TaskCard 
-          task={differentTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={differentTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
       if (taskCard) {
@@ -217,16 +163,11 @@ describe("TaskCard コンポーネント", () => {
   describe("ドラッグ&ドロップ機能", () => {
     it("ドラッグ開始時にdataTransferに正しいタスクIDが設定されることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
-      
+
       // dataTransferのモック作成
       const mockDataTransfer = {
         setData: vi.fn(),
@@ -245,23 +186,21 @@ describe("TaskCard コンポーネント", () => {
       }
 
       // dataTransfer.setDataが正しい値で呼ばれることを確認
-      expect(mockDataTransfer.setData).toHaveBeenCalledWith("text/plain", "task-1");
+      expect(mockDataTransfer.setData).toHaveBeenCalledWith(
+        "text/plain",
+        "task-1",
+      );
       expect(mockDataTransfer.effectAllowed).toBe("move");
     });
 
     it("異なるタスクでドラッグした場合に正しいIDが設定されることを確認", () => {
       const mockOnClick = vi.fn();
       const differentTask = { ...mockTask, id: "drag-test-task" };
-      
-      render(
-        <TaskCard 
-          task={differentTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={differentTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector(".task-card");
-      
+
       const mockDataTransfer = {
         setData: vi.fn(),
         effectAllowed: "",
@@ -277,7 +216,10 @@ describe("TaskCard コンポーネント", () => {
         fireEvent(taskCard, dragStartEvent);
       }
 
-      expect(mockDataTransfer.setData).toHaveBeenCalledWith("text/plain", "drag-test-task");
+      expect(mockDataTransfer.setData).toHaveBeenCalledWith(
+        "text/plain",
+        "drag-test-task",
+      );
     });
   });
 
@@ -285,13 +227,8 @@ describe("TaskCard コンポーネント", () => {
     it("duration が 0 の時に0分と表示されることを確認", () => {
       const mockOnClick = vi.fn();
       const zeroTask = { ...mockTask, duration: 0 };
-      
-      render(
-        <TaskCard 
-          task={zeroTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={zeroTask} onClick={mockOnClick} />);
 
       expect(screen.getByText("0分")).toBeDefined();
     });
@@ -299,13 +236,8 @@ describe("TaskCard コンポーネント", () => {
     it("duration が大きな値の時に正しく計算されることを確認", () => {
       const mockOnClick = vi.fn();
       const largeTask = { ...mockTask, duration: 100 }; // 1500分
-      
-      render(
-        <TaskCard 
-          task={largeTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={largeTask} onClick={mockOnClick} />);
 
       expect(screen.getByText("1500分")).toBeDefined();
     });
@@ -313,45 +245,34 @@ describe("TaskCard コンポーネント", () => {
     it("タスク名が空文字の場合でもエラーが発生しないことを確認", () => {
       const mockOnClick = vi.fn();
       const emptyNameTask = { ...mockTask, name: "" };
-      
+
       expect(() => {
-        render(
-          <TaskCard 
-            task={emptyNameTask} 
-            onClick={mockOnClick} 
-          />
-        );
+        render(<TaskCard task={emptyNameTask} onClick={mockOnClick} />);
       }).not.toThrow();
     });
 
     it("長いタスク名でもレンダリングできることを確認", () => {
       const mockOnClick = vi.fn();
-      const longNameTask = { 
-        ...mockTask, 
-        name: "これは非常に長いタスク名でコンポーネントが正しく処理できるかをテストしています" 
+      const longNameTask = {
+        ...mockTask,
+        name: "これは非常に長いタスク名でコンポーネントが正しく処理できるかをテストしています",
       };
-      
-      render(
-        <TaskCard 
-          task={longNameTask} 
-          onClick={mockOnClick} 
-        />
-      );
 
-      expect(screen.getByText("これは非常に長いタスク名でコンポーネントが正しく処理できるかをテストしています")).toBeDefined();
+      render(<TaskCard task={longNameTask} onClick={mockOnClick} />);
+
+      expect(
+        screen.getByText(
+          "これは非常に長いタスク名でコンポーネントが正しく処理できるかをテストしています",
+        ),
+      ).toBeDefined();
     });
   });
 
   describe("DOM構造の確認", () => {
     it("正しいDOM構造が生成されることを確認", () => {
       const mockOnClick = vi.fn();
-      
-      render(
-        <TaskCard 
-          task={mockTask} 
-          onClick={mockOnClick} 
-        />
-      );
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       // メインコンテナ
       const taskCard = document.querySelector(".task-card");
