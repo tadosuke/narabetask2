@@ -93,36 +93,27 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
       </div>
 
       {/* Task duration selection */}
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
         <label htmlFor="task-duration" style={{ flexShrink: 0 }}>
           工数:{' '}
         </label>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <input
-            id="task-duration"
-            type="range"
-            min="1"
-            max="16"
-            step="1"
-            value={task.duration}
-            onChange={(e) =>
-              // Update task duration while preserving other task properties
-              onUpdateTask({ ...task, duration: Number(e.target.value) })
-            }
-            aria-label="Select task duration"
-            style={{ width: '300px' }}
-          />
-          <span style={{ minWidth: '80px', textAlign: 'right' }}>
-            {task.duration * 15}分
-          </span>
-        </div>
+        <input
+          id="task-duration"
+          type="range"
+          min="1"
+          max="16"
+          step="1"
+          value={task.duration}
+          onChange={(e) =>
+            // Update task duration while preserving other task properties
+            onUpdateTask({ ...task, duration: Number(e.target.value) })
+          }
+          aria-label="Select task duration"
+          style={{ width: '300px' }}
+        />
+        <span style={{ minWidth: '80px', textAlign: 'right' }}>
+          {task.duration * 15}分
+        </span>
       </div>
     </div>
   );
