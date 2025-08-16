@@ -47,13 +47,21 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
 
   return (
     <div>
-      {/* Section title for task settings */}
-      <h3>Task Settings</h3>
-
-      {/* Delete task button */}
-      <button onClick={() => onDeleteTask(task.id)} aria-label="Delete task">
-        ×
-      </button>
+      {/* Section title with delete button on the right */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1rem',
+        }}
+      >
+        <h3 style={{ margin: 0 }}>Task Settings</h3>
+        {/* Delete task button */}
+        <button onClick={() => onDeleteTask(task.id)} aria-label="Delete task">
+          <span className="material-icons">delete</span>
+        </button>
+      </div>
 
       {/* Task name input field */}
       <div>

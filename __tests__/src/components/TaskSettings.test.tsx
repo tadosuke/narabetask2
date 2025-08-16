@@ -275,7 +275,7 @@ describe('TaskSettings Component', () => {
 
       const deleteButton = screen.getByLabelText('Delete task');
       expect(deleteButton).toBeDefined();
-      expect(deleteButton.textContent).toBe('×');
+      expect(deleteButton.textContent).toBe('delete');
     });
 
     it('should call onDeleteTask with correct task ID when clicked', () => {
