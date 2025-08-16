@@ -139,6 +139,22 @@
   margin-bottom: 0.25rem;
 }
 
+#task-name {
+  width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#task-duration {
+  width: 220px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .task-card-body {
   font-size: 0.875rem;
   color: #6c757d;
