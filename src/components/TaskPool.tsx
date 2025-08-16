@@ -1,5 +1,6 @@
 import type { Task } from '../types';
 import { TaskCard } from './TaskCard';
+import { TaskService } from '../services/taskService';
 
 /**
  * Task creation component
@@ -39,11 +40,9 @@ export const TaskPool = ({
     <div className="task-pool" onDragOver={handleDragOver} onDrop={handleDrop}>
       <h3>タスク置き場</h3>
       <div className="task-pool-content">
-        {tasks
-          .filter((task) => task.position === null)
-          .map((task) => (
-            <TaskCard key={task.id} task={task} onClick={onTaskClick} />
-          ))}
+        {TaskService.getPoolTasks(tasks).map((task) => (
+          <TaskCard key={task.id} task={task} onClick={onTaskClick} />
+        ))}
       </div>
     </div>
   );

@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import type { Task, WorkingHours } from '../types';
 import { TaskCard } from './TaskCard';
+import { generateTimeSlots } from '../utils/timeUtils';
+import { TimelineUtils } from '../utils/timelineUtils';
+import { ConflictService } from '../services/conflictService';
 import './Timeline.css';
 
 /**
@@ -42,54 +45,10 @@ export const Timeline = ({
   onTaskDrop,
 }: TimelineProps) => {
   /**
-   * Converts a time string in HH:MM format to total minutes
-   *
-   * @param {string} timeStr - Time in HH:MM format
-   * @returns {number} Total minutes from midnight
-   * @example timeToMinutes('14:30') returns 870 (14 * 60 + 30)
-   */
-  const timeToMinutes = (timeStr: string): number => {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
-  };
-
-  /**
-   * Converts total minutes to a formatted time string
-   *
-   * @param {number} minutes - Total minutes
-   * @returns {string} Formatted time string in HH:MM format
-   * @example minutesToTime(870) returns '14:30'
-   */
-  const minutesToTime = (minutes: number): string => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-  };
-
-  /**
-   * Generates an array of time slots in 15-minute increments
-   * Based on the working hours defined in the props
-   *
-   * @returns {string[]} Array of time slots as formatted strings
-   * @example ['09:00', '09:15', '09:30', ...]
-   */
-  const generateTimeSlots = (): string[] => {
-    const startMinutes = timeToMinutes(workingHours.start);
-    const endMinutes = timeToMinutes(workingHours.end);
-    const slots: string[] = [];
-
-    for (let minutes = startMinutes; minutes < endMinutes; minutes += 15) {
-      slots.push(minutesToTime(minutes));
-    }
-
-    return slots;
-  };
-
-  /**
    * Number of rows available in the timeline for task placement
    * Defines the maximum number of tasks that can be displayed simultaneously
    */
-  const timeSlots = generateTimeSlots();
+  const timeSlots = generateTimeSlots(workingHours.start, workingHours.end);
   const timelineRows = 5; // Maximum 5 rows for task placement
 
   /**
@@ -129,83 +88,6 @@ export const Timeline = ({
   );
 
   /**
-   * Memoized map of time slots to tasks
-   * Optimizes performance by pre-computing task occupancy for each time slot
-   *
-   * Key features:
-   * - Creates a mapping of time slots to tasks
-   * - Handles tasks spanning multiple time slots
-   * - Supports efficient conflict and task retrieval
-   *
-   * @returns {Map<string, Task[]>} Map of time slots to tasks
-   */
-  const timeSlotTaskMap = useMemo(() => {
-    const map = new Map<string, Task[]>();
-
-    timelineTasks.forEach((task) => {
-      if (!task.position) return;
-
-      const taskStart = timeToMinutes(task.position.startTime);
-      const taskEnd = taskStart + task.duration * 15;
-
-      // Add task to each 15-minute slot it occupies
-      for (let time = taskStart; time < taskEnd; time += 15) {
-        const timeSlot = minutesToTime(time);
-        if (!map.has(timeSlot)) {
-          map.set(timeSlot, []);
-        }
-        map.get(timeSlot)!.push(task);
-      }
-    });
-
-    return map;
-  }, [timelineTasks]);
-
-  /**
-   * Finds a task at a specific position (row and time slot)
-   *
-   * @param {number} row - The row to check
-   * @param {string} timeSlot - The time slot to check
-   * @returns {Task | null} The task at the specified position, or null if no task exists
-   */
-  const getTaskAtPosition = (row: number, timeSlot: string): Task | null => {
-    return (
-      timelineTasks.find((task) => {
-        if (!task.position) return false;
-        if (task.position.row !== row) return false;
-
-        // Check if the time slot is within the task's time range
-        const taskStart = timeToMinutes(task.position.startTime);
-        const taskEnd = taskStart + task.duration * 15;
-        const slotTime = timeToMinutes(timeSlot);
-
-        return slotTime >= taskStart && slotTime < taskEnd;
-      }) || null
-    );
-  };
-
-  /**
-   * Checks if a specific time slot has multiple tasks (conflict)
-   *
-   * @param {string} timeSlot - The time slot to check for conflicts
-   * @returns {boolean} True if multiple tasks exist in the time slot, false otherwise
-   */
-  const checkTimeSlotConflict = (timeSlot: string): boolean => {
-    const tasksInSlot = timeSlotTaskMap.get(timeSlot) || [];
-    return tasksInSlot.length > 1;
-  };
-
-  /**
-   * Retrieves all tasks in a specific time slot
-   *
-   * @param {string} timeSlot - The time slot to retrieve tasks for
-   * @returns {Task[]} Array of tasks in the specified time slot
-   */
-  const getTasksInTimeSlot = (timeSlot: string): Task[] => {
-    return timeSlotTaskMap.get(timeSlot) || [];
-  };
-
-  /**
    * Renders the Timeline component
    *
    * The rendering process involves:
@@ -242,17 +124,22 @@ export const Timeline = ({
           <div key={rowIndex} className="timeline-row">
             {timeSlots.map((timeSlot) => {
               // Determine task status and conflict information
-              const taskAtPosition = getTaskAtPosition(rowIndex, timeSlot);
-              const hasConflict = checkTimeSlotConflict(timeSlot);
+              const taskAtPosition = TimelineUtils.getTaskAtPosition(
+                timelineTasks,
+                rowIndex,
+                timeSlot
+              );
+              const hasConflict = ConflictService.hasTimeSlotConflict(
+                tasks,
+                timeSlot
+              );
               const isConflictSlot = hasConflict && taskAtPosition;
-              const conflictingTasks = hasConflict
-                ? getTasksInTimeSlot(timeSlot)
-                : [];
 
               // Generate tooltip text for conflicting tasks
-              const conflictTooltip = hasConflict
-                ? `Conflict detected: ${conflictingTasks.map((task) => `"${task.name}" (Row ${task.position!.row + 1})`).join(', ')}`
-                : '';
+              const conflictTooltip = ConflictService.generateConflictTooltip(
+                tasks,
+                timeSlot
+              );
 
               return (
                 <div
@@ -266,7 +153,7 @@ export const Timeline = ({
                 >
                   {/* Render task card only at its start time */}
                   {taskAtPosition &&
-                    timeSlot === taskAtPosition.position!.startTime && (
+                    TimelineUtils.isTaskStartSlot(taskAtPosition, timeSlot) && (
                       <TaskCard task={taskAtPosition} onClick={onTaskClick} />
                     )}
 

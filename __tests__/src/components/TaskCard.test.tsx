@@ -81,8 +81,8 @@ describe('TaskCard コンポーネント', () => {
         <TaskCard task={mockTaskWithLongDuration} onClick={mockOnClick} />
       );
 
-      // duration: 8 → 8 × 15 = 120分
-      expect(screen.getByText('120分')).toBeDefined();
+      // duration: 8 → 8 × 15 = 120分 → 2時間
+      expect(screen.getByText('2時間')).toBeDefined();
     });
 
     it('短時間タスクの継続時間が正しく表示されることを確認', () => {
@@ -235,11 +235,11 @@ describe('TaskCard コンポーネント', () => {
 
     it('duration が大きな値の時に正しく計算されることを確認', () => {
       const mockOnClick = vi.fn();
-      const largeTask = { ...mockTask, duration: 100 }; // 1500分
+      const largeTask = { ...mockTask, duration: 100 }; // 1500分 → 25時間
 
       render(<TaskCard task={largeTask} onClick={mockOnClick} />);
 
-      expect(screen.getByText('1500分')).toBeDefined();
+      expect(screen.getByText('25時間')).toBeDefined();
     });
 
     it('タスク名が空文字の場合でもエラーが発生しないことを確認', () => {

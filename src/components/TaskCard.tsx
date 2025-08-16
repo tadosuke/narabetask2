@@ -1,4 +1,5 @@
 import type { Task } from '../types';
+import { formatDuration } from '../utils/timeUtils';
 import './TaskCard.css';
 
 /**
@@ -72,7 +73,7 @@ export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
           Note: Multiplies duration by 15 to convert to minutes 
           Assumes duration is stored in some other unit (e.g., quarter-hours)
         */}
-        <span className="task-duration">{task.duration * 15}分</span>
+        <span className="task-duration">{formatDuration(task.duration)}</span>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Task } from '../types';
+import { formatDuration } from '../utils/timeUtils';
 import './TaskSettings.css';
 
 /**
@@ -92,7 +93,9 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
           aria-label="Select task duration"
           className="task-duration-slider"
         />
-        <span className="task-duration-display">{task.duration * 15}分</span>
+        <span className="task-duration-display">
+          {formatDuration(task.duration)}
+        </span>
       </div>
     </div>
   );
