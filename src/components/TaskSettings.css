@@ -57,3 +57,20 @@
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
+
+/* Task name and duration styling */
+#task-name {
+  width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#task-duration {
+  width: 220px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
