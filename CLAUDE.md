@@ -5,4 +5,4 @@
   - 新規プロジェクト作成時や依存関係追加時は必ずバージョンを固定化
   - npm install 後は package.json を確認し、範囲指定があれば除去する
 - ターミナルは PowerShell を使用
-- 修正後は必ず `npm run test`, `npm run build`, `npm run lint` を実行し、エラーが出ていたら修正する
+- 修正後は必ず `npm run test`, `npm run build` を実行し、エラーが出ていたら修正する
