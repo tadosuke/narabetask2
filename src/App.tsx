@@ -5,7 +5,6 @@ import { TaskSettings } from './components/TaskSettings';
 import { TaskCreator, TaskPool } from './components/TaskPool';
 import './App.css';
 
-
 /**
  * メインアプリケーションコンポーネント
  * タスクの作成・編集・スケジューリング機能を提供
