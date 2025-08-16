@@ -65,8 +65,8 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
       </div>
 
       {/* Task name input field */}
-      <div>
-        <label htmlFor="task-name">タスク名: </label>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
+        <label htmlFor="task-name" style={{ flexShrink: 0 }}>タスク名: </label>
         <input
           id="task-name"
           value={task.name}
@@ -75,27 +75,32 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
             onUpdateTask({ ...task, name: e.target.value })
           }
           aria-label="Edit task name"
+          style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
         />
       </div>
 
       {/* Task duration selection */}
       <div>
-        <label htmlFor="task-duration">工数: </label>
-        <select
-          id="task-duration"
-          value={task.duration}
-          onChange={(e) =>
-            // Update task duration while preserving other task properties
-            onUpdateTask({ ...task, duration: Number(e.target.value) })
-          }
-          aria-label="Select task duration"
-        >
-          {/* Duration options in minutes */}
-          <option value={1}>15 分</option>
-          <option value={2}>30 分</option>
-          <option value={3}>45 分</option>
-          <option value={4}>1 時間</option>
-        </select>
+        <label htmlFor="task-duration" style={{ flexShrink: 0 }}>工数: </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
+          <input
+            id="task-duration"
+            type="range"
+            min="1"
+            max="16"
+            step="1"
+            value={task.duration}
+            onChange={(e) =>
+              // Update task duration while preserving other task properties
+              onUpdateTask({ ...task, duration: Number(e.target.value) })
+            }
+            aria-label="Select task duration"
+            style={{ width: '300px' }}
+          />
+          <span style={{ minWidth: '80px', textAlign: 'right' }}>
+            {task.duration * 15}分
+          </span>
+        </div>
       </div>
     </div>
   );

@@ -56,10 +56,10 @@ describe('TaskSettings Component', () => {
       expect(nameInput).toBeDefined();
       expect((nameInput as HTMLInputElement).value).toBe('Test Task');
 
-      // Should render duration select with correct numerical value
-      const durationSelect = screen.getByRole('combobox');
-      expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('2'); // 2 = 30 minutes
+      // Should render duration slider with correct numerical value
+      const durationSlider = screen.getByRole('slider');
+      expect(durationSlider).toBeDefined();
+      expect((durationSlider as HTMLInputElement).value).toBe('2'); // 2 = 30 minutes
 
       // Should render delete button
       const deleteButton = screen.getByRole('button');
@@ -81,8 +81,8 @@ describe('TaskSettings Component', () => {
       const nameInput = screen.getByRole('textbox');
       expect((nameInput as HTMLInputElement).value).toBe('Scheduled Task');
 
-      const durationSelect = screen.getByRole('combobox');
-      expect((durationSelect as HTMLSelectElement).value).toBe('4'); // 4 = 60 minutes
+      const durationSlider = screen.getByRole('slider');
+      expect((durationSlider as HTMLInputElement).value).toBe('4'); // 4 = 60 minutes
     });
   });
 
@@ -170,8 +170,8 @@ describe('TaskSettings Component', () => {
     });
   });
 
-  describe('Duration Select Dropdown', () => {
-    it('should display current task duration in select field', () => {
+  describe('Duration Slider', () => {
+    it('should display current task duration in slider field', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
 
@@ -183,12 +183,12 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
-      expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('2'); // Current task duration is 2 (30 minutes)
+      const durationSlider = screen.getByRole('slider');
+      expect(durationSlider).toBeDefined();
+      expect((durationSlider as HTMLInputElement).value).toBe('2'); // Current task duration is 2 (30 minutes)
     });
 
-    it('should display all available duration options', () => {
+    it('should have correct slider attributes', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
 
@@ -200,15 +200,10 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      // Check that all numerical duration options are present
-      const durationSelect = screen.getByRole('combobox');
-      const options = Array.from(durationSelect.querySelectorAll('option'));
-
-      expect(options).toHaveLength(4);
-      expect(options[0].value).toBe('1'); // 15 minutes
-      expect(options[1].value).toBe('2'); // 30 minutes
-      expect(options[2].value).toBe('3'); // 45 minutes
-      expect(options[3].value).toBe('4'); // 1 hour
+      const durationSlider = screen.getByRole('slider');
+      expect(durationSlider.getAttribute('min')).toBe('1');
+      expect(durationSlider.getAttribute('max')).toBe('16');
+      expect(durationSlider.getAttribute('step')).toBe('1');
     });
 
     it('should call onUpdateTask when duration is changed', () => {
@@ -223,8 +218,8 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
-      fireEvent.change(durationSelect, { target: { value: '4' } });
+      const durationSlider = screen.getByRole('slider');
+      fireEvent.change(durationSlider, { target: { value: '4' } });
 
       expect(mockOnUpdateTask).toHaveBeenCalledTimes(1);
       expect(mockOnUpdateTask).toHaveBeenCalledWith({
@@ -233,7 +228,7 @@ describe('TaskSettings Component', () => {
       });
     });
 
-    it('should handle all duration option changes correctly', () => {
+    it('should handle various duration values correctly', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
 
@@ -245,25 +240,24 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
+      const durationSlider = screen.getByRole('slider');
 
-      // Test each duration option
-      const durationOptions = [
+      // Test various duration values
+      const durationValues = [
         { value: '1', expected: 1 },
-        { value: '2', expected: 2 },
-        { value: '3', expected: 3 },
-        { value: '4', expected: 4 },
+        { value: '8', expected: 8 },
+        { value: '16', expected: 16 },
       ];
 
-      durationOptions.forEach(({ value, expected }) => {
-        fireEvent.change(durationSelect, { target: { value } });
+      durationValues.forEach(({ value, expected }) => {
+        fireEvent.change(durationSlider, { target: { value } });
         expect(mockOnUpdateTask).toHaveBeenCalledWith({
           ...mockTask,
           duration: expected,
         });
       });
 
-      expect(mockOnUpdateTask).toHaveBeenCalledTimes(4);
+      expect(mockOnUpdateTask).toHaveBeenCalledTimes(3);
     });
   });
 
@@ -345,7 +339,7 @@ describe('TaskSettings Component', () => {
       expect(nameInput.getAttribute('aria-label')).toBe('Edit task name');
     });
 
-    it('should have proper htmlFor and id attributes for duration select', () => {
+    it('should have proper htmlFor and id attributes for duration slider', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
 
@@ -357,13 +351,13 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
+      const durationSlider = screen.getByRole('slider');
       const durationLabel =
-        durationSelect.labels?.[0] || screen.getByLabelText(/task duration/i);
+        durationSlider.labels?.[0] || screen.getByLabelText(/task duration/i);
 
       expect(durationLabel.getAttribute('for')).toBe('task-duration');
-      expect(durationSelect.getAttribute('id')).toBe('task-duration');
-      expect(durationSelect.getAttribute('aria-label')).toBe(
+      expect(durationSlider.getAttribute('id')).toBe('task-duration');
+      expect(durationSlider.getAttribute('aria-label')).toBe(
         'Select task duration'
       );
     });
@@ -390,12 +384,12 @@ describe('TaskSettings Component', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
 
-      // Test all duration values and their numeric representations
+      // Test various duration values and their numeric representations
       const durationTests = [
         { duration: 1, expectedValue: '1' }, // 15 minutes
         { duration: 2, expectedValue: '2' }, // 30 minutes
-        { duration: 3, expectedValue: '3' }, // 45 minutes
-        { duration: 4, expectedValue: '4' }, // 1 hour
+        { duration: 8, expectedValue: '8' }, // 2 hours
+        { duration: 16, expectedValue: '16' }, // 4 hours
       ];
 
       durationTests.forEach(({ duration, expectedValue }) => {
@@ -409,8 +403,8 @@ describe('TaskSettings Component', () => {
           />
         );
 
-        const durationSelect = screen.getByRole('combobox');
-        expect((durationSelect as HTMLSelectElement).value).toBe(expectedValue);
+        const durationSlider = screen.getByRole('slider');
+        expect((durationSlider as HTMLInputElement).value).toBe(expectedValue);
 
         unmount();
       });
@@ -428,18 +422,12 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
-      const options = Array.from(durationSelect.querySelectorAll('option'));
-
-      // Verify we have exactly 4 options
-      expect(options).toHaveLength(4);
-
-      // Verify numeric values are sequential from 1 to 4
-      const values = options.map((option) => parseInt(option.value));
-      expect(values).toEqual([1, 2, 3, 4]);
-
-      // Verify no values outside the valid range
-      expect(values.every((val) => val >= 1 && val <= 4)).toBe(true);
+      const durationSlider = screen.getByRole('slider');
+      
+      // Verify slider attributes
+      expect(durationSlider.getAttribute('min')).toBe('1');
+      expect(durationSlider.getAttribute('max')).toBe('16');
+      expect(durationSlider.getAttribute('step')).toBe('1');
     });
 
     it('should handle duration changes with proper numeric conversion', () => {
@@ -454,20 +442,20 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
+      const durationSlider = screen.getByRole('slider');
 
       // Change to duration 1 and verify numeric conversion
-      fireEvent.change(durationSelect, { target: { value: '1' } });
+      fireEvent.change(durationSlider, { target: { value: '1' } });
       expect(mockOnUpdateTask).toHaveBeenCalledWith({
         ...mockTask,
         duration: 1, // Should be a number, not string
       });
 
-      // Change to duration 4 and verify numeric conversion
-      fireEvent.change(durationSelect, { target: { value: '4' } });
+      // Change to duration 16 and verify numeric conversion
+      fireEvent.change(durationSlider, { target: { value: '16' } });
       expect(mockOnUpdateTask).toHaveBeenCalledWith({
         ...mockTask,
-        duration: 4, // Should be a number, not string
+        duration: 16, // Should be a number, not string
       });
     });
 
@@ -483,10 +471,10 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
+      const durationSlider = screen.getByRole('slider');
 
-      ['1', '2', '3', '4'].forEach((value) => {
-        fireEvent.change(durationSelect, { target: { value } });
+      ['1', '8', '16'].forEach((value) => {
+        fireEvent.change(durationSlider, { target: { value } });
         const lastCall =
           mockOnUpdateTask.mock.calls[mockOnUpdateTask.mock.calls.length - 1];
 
@@ -560,8 +548,8 @@ describe('TaskSettings Component', () => {
       // Reset mock
       mockOnUpdateTask.mockClear();
 
-      const durationSelect = screen.getByRole('combobox');
-      fireEvent.change(durationSelect, { target: { value: '2' } });
+      const durationSlider = screen.getByRole('slider');
+      fireEvent.change(durationSlider, { target: { value: '2' } });
 
       expect(mockOnUpdateTask).toHaveBeenCalledWith({
         ...mockTaskWithPosition,
@@ -582,15 +570,15 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
-      expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('1'); // Minimum duration value
+      const durationSlider = screen.getByRole('slider');
+      expect(durationSlider).toBeDefined();
+      expect((durationSlider as HTMLInputElement).value).toBe('1'); // Minimum duration value
     });
 
-    it('should handle maximum duration value (4)', () => {
+    it('should handle maximum duration value (16)', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
-      const maxDurationTask = { ...mockTask, duration: 4 };
+      const maxDurationTask = { ...mockTask, duration: 16 };
 
       render(
         <TaskSettings
@@ -600,9 +588,9 @@ describe('TaskSettings Component', () => {
         />
       );
 
-      const durationSelect = screen.getByRole('combobox');
-      expect(durationSelect).toBeDefined();
-      expect((durationSelect as HTMLSelectElement).value).toBe('4'); // Maximum duration value
+      const durationSlider = screen.getByRole('slider');
+      expect(durationSlider).toBeDefined();
+      expect((durationSlider as HTMLInputElement).value).toBe('16'); // Maximum duration value
     });
   });
 
