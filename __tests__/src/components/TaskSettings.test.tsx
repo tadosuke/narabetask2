@@ -80,7 +80,7 @@ describe('TaskSettings Component', () => {
 
       const nameInput = screen.getByRole('textbox');
       expect((nameInput as HTMLInputElement).value).toBe('Scheduled Task');
-      
+
       const durationSelect = screen.getByRole('combobox');
       expect((durationSelect as HTMLSelectElement).value).toBe('4'); // 4 = 60 minutes
     });
@@ -203,10 +203,10 @@ describe('TaskSettings Component', () => {
       // Check that all numerical duration options are present
       const durationSelect = screen.getByRole('combobox');
       const options = Array.from(durationSelect.querySelectorAll('option'));
-      
+
       expect(options).toHaveLength(4);
       expect(options[0].value).toBe('1'); // 15 minutes
-      expect(options[1].value).toBe('2'); // 30 minutes  
+      expect(options[1].value).toBe('2'); // 30 minutes
       expect(options[2].value).toBe('3'); // 45 minutes
       expect(options[3].value).toBe('4'); // 1 hour
     });
@@ -337,7 +337,8 @@ describe('TaskSettings Component', () => {
       );
 
       const nameInput = screen.getByRole('textbox');
-      const nameLabel = nameInput.labels?.[0] || screen.getByLabelText(/task name/i);
+      const nameLabel =
+        nameInput.labels?.[0] || screen.getByLabelText(/task name/i);
 
       expect(nameLabel.getAttribute('for')).toBe('task-name');
       expect(nameInput.getAttribute('id')).toBe('task-name');
@@ -357,7 +358,8 @@ describe('TaskSettings Component', () => {
       );
 
       const durationSelect = screen.getByRole('combobox');
-      const durationLabel = durationSelect.labels?.[0] || screen.getByLabelText(/task duration/i);
+      const durationLabel =
+        durationSelect.labels?.[0] || screen.getByLabelText(/task duration/i);
 
       expect(durationLabel.getAttribute('for')).toBe('task-duration');
       expect(durationSelect.getAttribute('id')).toBe('task-duration');
@@ -387,18 +389,18 @@ describe('TaskSettings Component', () => {
     it('should correctly handle duration value to time conversion', () => {
       const mockOnUpdateTask = vi.fn();
       const mockOnDeleteTask = vi.fn();
-      
+
       // Test all duration values and their numeric representations
       const durationTests = [
         { duration: 1, expectedValue: '1' }, // 15 minutes
-        { duration: 2, expectedValue: '2' }, // 30 minutes  
+        { duration: 2, expectedValue: '2' }, // 30 minutes
         { duration: 3, expectedValue: '3' }, // 45 minutes
         { duration: 4, expectedValue: '4' }, // 1 hour
       ];
 
       durationTests.forEach(({ duration, expectedValue }) => {
         const testTask = { ...mockTask, duration };
-        
+
         const { unmount } = render(
           <TaskSettings
             task={testTask}
@@ -409,7 +411,7 @@ describe('TaskSettings Component', () => {
 
         const durationSelect = screen.getByRole('combobox');
         expect((durationSelect as HTMLSelectElement).value).toBe(expectedValue);
-        
+
         unmount();
       });
     });
@@ -428,16 +430,16 @@ describe('TaskSettings Component', () => {
 
       const durationSelect = screen.getByRole('combobox');
       const options = Array.from(durationSelect.querySelectorAll('option'));
-      
+
       // Verify we have exactly 4 options
       expect(options).toHaveLength(4);
-      
+
       // Verify numeric values are sequential from 1 to 4
-      const values = options.map(option => parseInt(option.value));
+      const values = options.map((option) => parseInt(option.value));
       expect(values).toEqual([1, 2, 3, 4]);
-      
+
       // Verify no values outside the valid range
-      expect(values.every(val => val >= 1 && val <= 4)).toBe(true);
+      expect(values.every((val) => val >= 1 && val <= 4)).toBe(true);
     });
 
     it('should handle duration changes with proper numeric conversion', () => {
@@ -453,7 +455,7 @@ describe('TaskSettings Component', () => {
       );
 
       const durationSelect = screen.getByRole('combobox');
-      
+
       // Change to duration 1 and verify numeric conversion
       fireEvent.change(durationSelect, { target: { value: '1' } });
       expect(mockOnUpdateTask).toHaveBeenCalledWith({
@@ -482,11 +484,12 @@ describe('TaskSettings Component', () => {
       );
 
       const durationSelect = screen.getByRole('combobox');
-      
-      ['1', '2', '3', '4'].forEach(value => {
+
+      ['1', '2', '3', '4'].forEach((value) => {
         fireEvent.change(durationSelect, { target: { value } });
-        const lastCall = mockOnUpdateTask.mock.calls[mockOnUpdateTask.mock.calls.length - 1];
-        
+        const lastCall =
+          mockOnUpdateTask.mock.calls[mockOnUpdateTask.mock.calls.length - 1];
+
         // Verify duration is always passed as a number
         expect(typeof lastCall[0].duration).toBe('number');
         expect(lastCall[0].duration).toBe(parseInt(value));
