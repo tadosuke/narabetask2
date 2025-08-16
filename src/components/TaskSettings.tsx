@@ -93,7 +93,14 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
       </div>
 
       {/* Task duration selection */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          whiteSpace: 'nowrap',
+        }}
+      >
         <label htmlFor="task-duration" style={{ flexShrink: 0 }}>
           工数:{' '}
         </label>
