@@ -1,57 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Task, WorkingHours } from './types';
-import { TaskCard } from './components/TaskCard';
 import { Timeline } from './components/Timeline';
 import { TaskSettings } from './components/TaskSettings';
+import { TaskCreator, TaskPool } from './components/TaskPool';
 import './App.css';
 
-/**
- * タスク作成コンポーネント
- * 新しいタスクを作成するためのボタンを提供
- */
-const TaskCreator = ({ onCreateTask }: { onCreateTask: () => void }) => (
-  <div>
-    <button onClick={onCreateTask}>タスク作成</button>
-  </div>
-);
-
-/**
- * タスク置き場コンポーネント
- * 未スケジュールのタスクを表示し、ドラッグ&ドロップでタスクの受け取りが可能
- */
-const TaskPool = ({
-  tasks,
-  onTaskClick,
-  onTaskDrop,
-}: {
-  tasks: Task[];
-  onTaskClick: (taskId: string) => void;
-  onTaskDrop: (taskId: string) => void;
-}) => {
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const taskId = e.dataTransfer.getData('text/plain');
-    onTaskDrop(taskId);
-  };
-
-  return (
-    <div className="task-pool" onDragOver={handleDragOver} onDrop={handleDrop}>
-      <h3>タスク置き場</h3>
-      <div className="task-pool-content">
-        {tasks
-          .filter((task) => task.position === null)
-          .map((task) => (
-            <TaskCard key={task.id} task={task} onClick={onTaskClick} />
-          ))}
-      </div>
-    </div>
-  );
-};
 
 /**
  * メインアプリケーションコンポーネント
