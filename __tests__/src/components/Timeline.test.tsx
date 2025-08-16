@@ -46,7 +46,7 @@ describe('Timeline コンポーネント', () => {
         />
       );
 
-      expect(screen.getByText(/タイムライン/)).toBeDefined();
+      expect(screen.getByText(/Timeline/)).toBeDefined();
     });
 
     it('勤務時間が正しく表示されることを確認', () => {
@@ -62,7 +62,7 @@ describe('Timeline コンポーネント', () => {
         />
       );
 
-      expect(screen.getByText('タイムライン (09:00 - 12:00)')).toBeDefined();
+      expect(screen.getByText('Timeline (09:00 - 12:00)')).toBeDefined();
     });
 
     it('タイムラインの基本構造が存在することを確認', () => {

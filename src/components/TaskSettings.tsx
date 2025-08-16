@@ -1,46 +1,91 @@
 import React from 'react';
 import type { Task } from '../types';
 
+/**
+ * Props interface for the TaskSettings component
+ * Defines the shape of props expected by the component
+ */
 interface TaskSettingsProps {
+  /**
+   * The currently selected task to be edited
+   * Null indicates no task is selected
+   */
   task: Task | null;
+
+  /**
+   * Callback function to update the task
+   * @param task - The updated task object
+   */
   onUpdateTask: (task: Task) => void;
+
+  /**
+   * Callback function to delete the current task
+   * @param taskId - Unique identifier of the task to be deleted
+   */
   onDeleteTask: (taskId: string) => void;
 }
 
 /**
- * Task settings component
- * Provides functionality to edit selected task name and duration
+ * TaskSettings Component
+ *
+ * Provides a user interface for editing task details, including:
+ * - Task name modification
+ * - Task duration selection
+ * - Task deletion
+ *
+ * @component
+ * @param {TaskSettingsProps} props - Component properties
+ * @returns {React.ReactElement|null} Rendered task settings UI or null if no task is selected
  */
 export const TaskSettings: React.FC<TaskSettingsProps> = ({
   task,
   onUpdateTask,
   onDeleteTask,
 }) => {
+  // If no task is selected, render nothing
   if (!task) return null;
 
   return (
     <div>
-      <h3>タスク設定</h3>
-      <button onClick={() => onDeleteTask(task.id)}>×</button>
+      {/* Section title for task settings */}
+      <h3>Task Settings</h3>
+
+      {/* Delete task button */}
+      <button onClick={() => onDeleteTask(task.id)} aria-label="Delete task">
+        ×
+      </button>
+
+      {/* Task name input field */}
       <div>
-        <label>タスク名: </label>
+        <label htmlFor="task-name">Task Name: </label>
         <input
+          id="task-name"
           value={task.name}
-          onChange={(e) => onUpdateTask({ ...task, name: e.target.value })}
+          onChange={(e) =>
+            // Update task name while preserving other task properties
+            onUpdateTask({ ...task, name: e.target.value })
+          }
+          aria-label="Edit task name"
         />
       </div>
+
+      {/* Task duration selection */}
       <div>
-        <label>工数: </label>
+        <label htmlFor="task-duration">Estimated Time: </label>
         <select
+          id="task-duration"
           value={task.duration}
           onChange={(e) =>
+            // Update task duration while preserving other task properties
             onUpdateTask({ ...task, duration: Number(e.target.value) })
           }
+          aria-label="Select task duration"
         >
-          <option value={1}>15分</option>
-          <option value={2}>30分</option>
-          <option value={3}>45分</option>
-          <option value={4}>1時間</option>
+          {/* Duration options in minutes */}
+          <option value={1}>15 minutes</option>
+          <option value={2}>30 minutes</option>
+          <option value={3}>45 minutes</option>
+          <option value={4}>1 hour</option>
         </select>
       </div>
     </div>

@@ -2,6 +2,16 @@ import { useMemo } from 'react';
 import type { Task, WorkingHours } from '../types';
 import { TaskCard } from './TaskCard';
 
+/**
+ * Props interface for the Timeline component
+ * Defines the input parameters required to render and interact with the timeline
+ *
+ * @interface TimelineProps
+ * @property {Task[]} tasks - Array of tasks to be displayed on the timeline
+ * @property {WorkingHours} workingHours - Defines the start and end times of the working day
+ * @property {Function} onTaskClick - Callback function triggered when a task is clicked
+ * @property {Function} onTaskDrop - Callback function triggered when a task is dropped onto a new time slot
+ */
 interface TimelineProps {
   tasks: Task[];
   workingHours: WorkingHours;
@@ -9,26 +19,59 @@ interface TimelineProps {
   onTaskDrop: (taskId: string, row: number, startTime: string) => void;
 }
 
+/**
+ * Timeline Component
+ *
+ * Renders an interactive timeline for task scheduling and visualization
+ *
+ * Key features:
+ * - Displays tasks across multiple rows with 15-minute time slots
+ * - Supports drag and drop task repositioning
+ * - Detects and highlights time slot conflicts
+ * - Renders tasks with their respective time allocations
+ *
+ * @component
+ * @param {TimelineProps} props - Component properties
+ * @returns {React.ReactElement} Rendered timeline component
+ */
 export const Timeline = ({
   tasks,
   workingHours,
   onTaskClick,
   onTaskDrop,
 }: TimelineProps) => {
-  // 時間をHH:MM形式から分単位に変換
+  /**
+   * Converts a time string in HH:MM format to total minutes
+   *
+   * @param {string} timeStr - Time in HH:MM format
+   * @returns {number} Total minutes from midnight
+   * @example timeToMinutes('14:30') returns 870 (14 * 60 + 30)
+   */
   const timeToMinutes = (timeStr: string): number => {
     const [hours, minutes] = timeStr.split(':').map(Number);
     return hours * 60 + minutes;
   };
 
-  // 分単位を時間文字列に変換
+  /**
+   * Converts total minutes to a formatted time string
+   *
+   * @param {number} minutes - Total minutes
+   * @returns {string} Formatted time string in HH:MM format
+   * @example minutesToTime(870) returns '14:30'
+   */
   const minutesToTime = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
   };
 
-  // 15分単位のタイムスロットを生成
+  /**
+   * Generates an array of time slots in 15-minute increments
+   * Based on the working hours defined in the props
+   *
+   * @returns {string[]} Array of time slots as formatted strings
+   * @example ['09:00', '09:15', '09:30', ...]
+   */
   const generateTimeSlots = (): string[] => {
     const startMinutes = timeToMinutes(workingHours.start);
     const endMinutes = timeToMinutes(workingHours.end);
@@ -41,28 +84,60 @@ export const Timeline = ({
     return slots;
   };
 
+  /**
+   * Number of rows available in the timeline for task placement
+   * Defines the maximum number of tasks that can be displayed simultaneously
+   */
   const timeSlots = generateTimeSlots();
-  const timelineRows = 5; // 最大5行のタスクを配置可能
+  const timelineRows = 5; // Maximum 5 rows for task placement
 
-  // ドラッグオーバー処理
+  /**
+   * Handles the drag over event for timeline slots
+   * Prevents default behavior and sets the drop effect to 'move'
+   *
+   * @param {React.DragEvent} e - The drag event
+   */
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
-  // ドロップ処理
+  /**
+   * Handles the drop event when a task is dropped onto a timeline slot
+   * Calls the onTaskDrop callback with task details
+   *
+   * @param {React.DragEvent} e - The drop event
+   * @param {number} row - The row where the task is dropped
+   * @param {string} timeSlot - The time slot where the task is dropped
+   */
   const handleDrop = (e: React.DragEvent, row: number, timeSlot: string) => {
     e.preventDefault();
     const taskId = e.dataTransfer.getData('text/plain');
     onTaskDrop(taskId, row, timeSlot);
   };
 
-  // タスクがタイムライン上にあるかチェック（メモ化）
+  /**
+   * Memoized list of tasks currently placed on the timeline
+   * Filters tasks that have a non-null position
+   *
+   * @returns {Task[]} Array of tasks with defined positions
+   */
   const timelineTasks = useMemo(
     () => tasks.filter((task) => task.position !== null),
     [tasks]
   );
-  // 時間スロットごとのタスクマップを作成（メモ化によるパフォーマンス最適化）
+
+  /**
+   * Memoized map of time slots to tasks
+   * Optimizes performance by pre-computing task occupancy for each time slot
+   *
+   * Key features:
+   * - Creates a mapping of time slots to tasks
+   * - Handles tasks spanning multiple time slots
+   * - Supports efficient conflict and task retrieval
+   *
+   * @returns {Map<string, Task[]>} Map of time slots to tasks
+   */
   const timeSlotTaskMap = useMemo(() => {
     const map = new Map<string, Task[]>();
 
@@ -72,7 +147,7 @@ export const Timeline = ({
       const taskStart = timeToMinutes(task.position.startTime);
       const taskEnd = taskStart + task.duration * 15;
 
-      // タスクが占有する各15分スロットをマップに追加
+      // Add task to each 15-minute slot it occupies
       for (let time = taskStart; time < taskEnd; time += 15) {
         const timeSlot = minutesToTime(time);
         if (!map.has(timeSlot)) {
@@ -85,14 +160,20 @@ export const Timeline = ({
     return map;
   }, [timelineTasks]);
 
-  // 特定の位置にタスクがあるかチェック
+  /**
+   * Finds a task at a specific position (row and time slot)
+   *
+   * @param {number} row - The row to check
+   * @param {string} timeSlot - The time slot to check
+   * @returns {Task | null} The task at the specified position, or null if no task exists
+   */
   const getTaskAtPosition = (row: number, timeSlot: string): Task | null => {
     return (
       timelineTasks.find((task) => {
         if (!task.position) return false;
         if (task.position.row !== row) return false;
 
-        // タスクの開始時刻から終了時刻までの範囲内かチェック
+        // Check if the time slot is within the task's time range
         const taskStart = timeToMinutes(task.position.startTime);
         const taskEnd = taskStart + task.duration * 15;
         const slotTime = timeToMinutes(timeSlot);
@@ -101,28 +182,52 @@ export const Timeline = ({
       }) || null
     );
   };
-  // 特定の時間帯に重複があるかチェック（最適化版）
+
+  /**
+   * Checks if a specific time slot has multiple tasks (conflict)
+   *
+   * @param {string} timeSlot - The time slot to check for conflicts
+   * @returns {boolean} True if multiple tasks exist in the time slot, false otherwise
+   */
   const checkTimeSlotConflict = (timeSlot: string): boolean => {
     const tasksInSlot = timeSlotTaskMap.get(timeSlot) || [];
     return tasksInSlot.length > 1;
   };
 
-  // 特定の時間帯にある全てのタスクを取得（最適化版）
+  /**
+   * Retrieves all tasks in a specific time slot
+   *
+   * @param {string} timeSlot - The time slot to retrieve tasks for
+   * @returns {Task[]} Array of tasks in the specified time slot
+   */
   const getTasksInTimeSlot = (timeSlot: string): Task[] => {
     return timeSlotTaskMap.get(timeSlot) || [];
   };
 
+  /**
+   * Renders the Timeline component
+   *
+   * The rendering process involves:
+   * 1. Creating a timeline grid with time slots
+   * 2. Rendering a header with time slot labels
+   * 3. Creating multiple rows for task placement
+   * 4. Handling task rendering, conflicts, and drag-and-drop interactions
+   *
+   * @returns {React.ReactElement} Timeline component with tasks and time slots
+   */
   return (
     <div
       className="timeline"
+      // Dynamically sets CSS variable for responsive grid sizing
       style={{ '--time-slots': timeSlots.length } as React.CSSProperties}
     >
+      {/* Timeline header showing working hours */}
       <h3>
-        タイムライン ({workingHours.start} - {workingHours.end})
+        Timeline ({workingHours.start} - {workingHours.end})
       </h3>
 
       <div className="timeline-grid">
-        {/* ヘッダー行（時刻表示） */}
+        {/* Header row displaying time slot labels */}
         <div className="timeline-header">
           {timeSlots.map((timeSlot) => (
             <div key={timeSlot} className="timeline-time-slot-header">
@@ -131,10 +236,11 @@ export const Timeline = ({
           ))}
         </div>
 
-        {/* タイムライン行 */}
+        {/* Timeline rows for task placement */}
         {Array.from({ length: timelineRows }, (_, rowIndex) => (
           <div key={rowIndex} className="timeline-row">
             {timeSlots.map((timeSlot) => {
+              // Determine task status and conflict information
               const taskAtPosition = getTaskAtPosition(rowIndex, timeSlot);
               const hasConflict = checkTimeSlotConflict(timeSlot);
               const isConflictSlot = hasConflict && taskAtPosition;
@@ -142,23 +248,28 @@ export const Timeline = ({
                 ? getTasksInTimeSlot(timeSlot)
                 : [];
 
-              // 重複情報のツールチップテキストを生成
+              // Generate tooltip text for conflicting tasks
               const conflictTooltip = hasConflict
-                ? `重複検出: ${conflictingTasks.map((task) => `"${task.name}" (行${task.position!.row + 1})`).join(', ')}`
+                ? `Conflict detected: ${conflictingTasks.map((task) => `"${task.name}" (Row ${task.position!.row + 1})`).join(', ')}`
                 : '';
 
               return (
                 <div
                   key={`${rowIndex}-${timeSlot}`}
+                  // Dynamic CSS classes for slot state
                   className={`timeline-slot ${taskAtPosition ? 'occupied' : 'empty'} ${isConflictSlot ? 'conflict' : ''}`}
                   title={conflictTooltip}
+                  // Drag and drop event handlers
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, rowIndex, timeSlot)}
                 >
+                  {/* Render task card only at its start time */}
                   {taskAtPosition &&
                     timeSlot === taskAtPosition.position!.startTime && (
                       <TaskCard task={taskAtPosition} onClick={onTaskClick} />
                     )}
+
+                  {/* Conflict indicator */}
                   {isConflictSlot && (
                     <div className="conflict-indicator">⚠️</div>
                   )}

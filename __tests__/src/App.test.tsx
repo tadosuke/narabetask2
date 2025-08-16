@@ -10,7 +10,7 @@ describe('App コンポーネント', () => {
 
   it('タイムラインセクションが表示されることを確認', () => {
     render(<App />);
-    expect(screen.getByText(/タイムライン/)).toBeDefined();
+    expect(screen.getByText(/Timeline/)).toBeDefined();
   });
 
   it('タスク作成ボタンが表示され、クリック可能であることを確認', () => {
