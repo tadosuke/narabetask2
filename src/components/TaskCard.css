@@ -2,8 +2,7 @@
 .task-card {
   background: white;
   border: 1px solid #dee2e6;
-  border-radius: 6px;
-  padding: 0.75rem;
+  border-radius: 4px;
   cursor: grab;
   transition: all 0.2s;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -12,7 +11,8 @@
 /* TaskCard Pool Variant - for TaskPool display */
 .task-card--pool {
   width: 120px;
-  min-height: 80px;
+  padding: 0.75rem;
+  height: 50px;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border: 2px solid #dee2e6;
 }
@@ -30,6 +30,7 @@
   border: 1px solid #2196f3;
   box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
   font-size: 0.875rem;
+  vertical-align: middle;
 }
 
 .task-card--timeline:hover {
@@ -67,9 +68,9 @@
 /* TaskCard inside timeline slots */
 .timeline-slot .task-card {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  bottom: 2px;
+  top: 1px;
+  left: 0px;
+  bottom: 1px;
   margin: 0;
   /* Width is now controlled by inline style to span multiple slots */
   /* right: 2px; - Removed to allow custom width calculation */

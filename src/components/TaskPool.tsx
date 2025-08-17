@@ -39,7 +39,6 @@ export const TaskPool = ({
 
   return (
     <div className="task-pool" onDragOver={handleDragOver} onDrop={handleDrop}>
-      <h3>タスク置き場</h3>
       <div className="task-pool-content">
         {TaskService.getPoolTasks(tasks).map((task) => (
           <TaskCard

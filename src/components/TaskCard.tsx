@@ -54,7 +54,7 @@ export const TaskCard = ({
       const slotWidth = 60;
       const gapWidth = 1;
       const totalWidth =
-        task.duration * slotWidth + (task.duration - 1) * gapWidth;
+        task.duration * slotWidth + (task.duration - 1) * gapWidth - 2;
 
       return {
         width: `${totalWidth}px`,
@@ -100,14 +100,11 @@ export const TaskCard = ({
         {/* Display the task name */}
         <span className="task-name">{task.name}</span>
       </div>
-      <div className="task-card-body">
-        {/* 
-          Display task duration in minutes 
-          Note: Multiplies duration by 15 to convert to minutes 
-          Assumes duration is stored in some other unit (e.g., quarter-hours)
-        */}
-        <span className="task-duration">{formatDuration(task.duration)}</span>
-      </div>
+      {variant !== 'timeline' && (
+        <div className="task-card-body">
+          <span className="task-duration">{formatDuration(task.duration)}</span>
+        </div>
+      )}
     </div>
   );
 };
