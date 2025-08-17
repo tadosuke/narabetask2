@@ -3,7 +3,6 @@ import { timeToMinutes } from '../utils/timeUtils';
 import {
   DEFAULT_TASK_DURATION_UNITS,
   TIME_SLOT_INCREMENT_MINUTES,
-  DISPLAY_INDEX_OFFSET,
 } from '../constants';
 
 /**
@@ -30,7 +29,7 @@ export class TaskService {
   static createNewTask(existingTasks: Task[]): Task {
     return {
       id: `task-${Date.now()}`,
-      name: `タスク ${existingTasks.length + DISPLAY_INDEX_OFFSET}`,
+      name: `タスク ${existingTasks.length + 1}`,
       duration: DEFAULT_TASK_DURATION_UNITS, // デフォルト30分（15分単位で2 = 30分）
       position: null, // タスク置き場に配置（タイムライン上ではない）
     };
@@ -129,7 +128,7 @@ export class TaskService {
         const conflictType =
           task.position.row === row
             ? '同一行重複'
-            : `異なる行重複 (行${task.position.row + DISPLAY_INDEX_OFFSET})`;
+            : `異なる行重複 (行${task.position.row + 1})`;
 
         // 重複のタイプを詳細に分析
         let overlapType = '完全重複';

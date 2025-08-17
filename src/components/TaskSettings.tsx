@@ -1,11 +1,7 @@
 import React from 'react';
 import type { Task } from '../types';
 import { formatDuration } from '../utils/timeUtils';
-import {
-  MIN_TASK_DURATION_UNITS,
-  MAX_TASK_DURATION_UNITS,
-  TASK_DURATION_STEP,
-} from '../constants';
+import { MAX_TASK_DURATION_UNITS } from '../constants';
 import './TaskSettings.css';
 
 /**
@@ -87,9 +83,9 @@ export const TaskSettings: React.FC<TaskSettingsProps> = ({
         <input
           id="task-duration"
           type="range"
-          min={MIN_TASK_DURATION_UNITS.toString()}
+          min="1"
           max={MAX_TASK_DURATION_UNITS.toString()}
-          step={TASK_DURATION_STEP.toString()}
+          step="1"
           value={task.duration}
           onChange={(e) =>
             // Update task duration while preserving other task properties

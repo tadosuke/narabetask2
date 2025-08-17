@@ -3,11 +3,7 @@
  * 時間変換、タイムスロット生成、業務時間計算などを提供
  */
 
-import {
-  TIME_SLOT_INCREMENT_MINUTES,
-  MINUTES_PER_HOUR,
-  TIME_STRING_PADDING_LENGTH,
-} from '../constants';
+import { TIME_SLOT_INCREMENT_MINUTES } from '../constants';
 
 /**
  * HH:MM形式の時間文字列を分単位の数値に変換
@@ -17,7 +13,7 @@ import {
  */
 export const timeToMinutes = (timeStr: string): number => {
   const [hours, minutes] = timeStr.split(':').map(Number);
-  return hours * MINUTES_PER_HOUR + minutes;
+  return hours * 60 + minutes;
 };
 
 /**
@@ -27,9 +23,9 @@ export const timeToMinutes = (timeStr: string): number => {
  * @example minutesToTime(870) // returns '14:30'
  */
 export const minutesToTime = (minutes: number): string => {
-  const hours = Math.floor(minutes / MINUTES_PER_HOUR);
-  const mins = minutes % MINUTES_PER_HOUR;
-  return `${hours.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}:${mins.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}`;
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 };
 
 /**
@@ -68,8 +64,8 @@ export const generateTimeSlots = (
  */
 export const formatDuration = (duration: number): string => {
   const totalMinutes = duration * TIME_SLOT_INCREMENT_MINUTES;
-  const hours = Math.floor(totalMinutes / MINUTES_PER_HOUR);
-  const minutes = totalMinutes % MINUTES_PER_HOUR;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
 
   if (hours > 0 && minutes > 0) {
     return `${hours}時間${minutes}分`;

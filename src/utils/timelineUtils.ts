@@ -1,10 +1,6 @@
 import type { Task } from '../types';
 import { timeToMinutes } from './timeUtils';
-import {
-  TIME_SLOT_INCREMENT_MINUTES,
-  MINUTES_PER_HOUR,
-  TIME_STRING_PADDING_LENGTH,
-} from '../constants';
+import { TIME_SLOT_INCREMENT_MINUTES } from '../constants';
 
 /**
  * タイムライン関連のユーティリティ関数集
@@ -84,8 +80,8 @@ export class TimelineUtils {
    * 分を時刻文字列に変換（内部ヘルパー）
    */
   private static minutesToTime(minutes: number): string {
-    const hours = Math.floor(minutes / MINUTES_PER_HOUR);
-    const mins = minutes % MINUTES_PER_HOUR;
-    return `${hours.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}:${mins.toString().padStart(TIME_STRING_PADDING_LENGTH, '0')}`;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
   }
 }
