@@ -19,6 +19,12 @@ interface TaskCardProps {
    * Used to apply visual styling during drag operations
    */
   isDragging?: boolean;
+  /**
+   * Optional variant to determine the styling context
+   * 'pool' for TaskPool display, 'timeline' for Timeline display
+   * @default 'pool'
+   */
+  variant?: 'pool' | 'timeline';
 }
 
 /**
@@ -32,7 +38,12 @@ interface TaskCardProps {
  * @param {TaskCardProps} props - Component properties
  * @returns {React.ReactElement} Rendered task card element
  */
-export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
+export const TaskCard = ({
+  task,
+  onClick,
+  isDragging,
+  variant = 'pool',
+}: TaskCardProps) => {
   /**
    * Calculate the width style for timeline placement
    * When on timeline, task cards should span multiple slots based on duration
@@ -75,8 +86,8 @@ export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
 
   return (
     <div
-      // Dynamically apply 'dragging' class when isDragging is true
-      className={`task-card ${isDragging ? 'dragging' : ''}`}
+      // Dynamically apply variant and dragging classes
+      className={`task-card task-card--${variant} ${isDragging ? 'dragging' : ''}`}
       // Make the div draggable
       draggable
       // Attach drag start and click event handlers

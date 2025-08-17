@@ -155,7 +155,11 @@ export const Timeline = ({
                   {/* Render task card only at its start time */}
                   {taskAtPosition &&
                     TimelineUtils.isTaskStartSlot(taskAtPosition, timeSlot) && (
-                      <TaskCard task={taskAtPosition} onClick={onTaskClick} />
+                      <TaskCard
+                        task={taskAtPosition}
+                        onClick={onTaskClick}
+                        variant="timeline"
+                      />
                     )}
 
                   {/* Conflict indicator */}

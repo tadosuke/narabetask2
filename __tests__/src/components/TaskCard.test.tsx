@@ -52,7 +52,7 @@ describe('TaskCard コンポーネント', () => {
       render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector('.task-card');
-      expect(taskCard?.className).toBe('task-card ');
+      expect(taskCard?.className).toBe('task-card task-card--pool ');
     });
   });
 
@@ -97,6 +97,37 @@ describe('TaskCard コンポーネント', () => {
     });
   });
 
+  describe('variantプロパティの動作', () => {
+    it('variant="pool"の時、task-card--poolクラスが適用されることを確認', () => {
+      const mockOnClick = vi.fn();
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} variant="pool" />);
+
+      const taskCard = document.querySelector('.task-card');
+      expect(taskCard?.className).toContain('task-card--pool');
+    });
+
+    it('variant="timeline"の時、task-card--timelineクラスが適用されることを確認', () => {
+      const mockOnClick = vi.fn();
+
+      render(
+        <TaskCard task={mockTask} onClick={mockOnClick} variant="timeline" />
+      );
+
+      const taskCard = document.querySelector('.task-card');
+      expect(taskCard?.className).toContain('task-card--timeline');
+    });
+
+    it('variantが未指定の時、デフォルトでpoolバリアントが適用されることを確認', () => {
+      const mockOnClick = vi.fn();
+
+      render(<TaskCard task={mockTask} onClick={mockOnClick} />);
+
+      const taskCard = document.querySelector('.task-card');
+      expect(taskCard?.className).toContain('task-card--pool');
+    });
+  });
+
   describe('isDraggingプロパティの動作', () => {
     it('isDraggingがfalseの時、draggingクラスが適用されないことを確認', () => {
       const mockOnClick = vi.fn();
@@ -106,7 +137,7 @@ describe('TaskCard コンポーネント', () => {
       );
 
       const taskCard = document.querySelector('.task-card');
-      expect(taskCard?.className).toBe('task-card ');
+      expect(taskCard?.className).toBe('task-card task-card--pool ');
     });
 
     it('isDraggingがtrueの時、draggingクラスが適用されることを確認', () => {
@@ -117,7 +148,7 @@ describe('TaskCard コンポーネント', () => {
       );
 
       const taskCard = document.querySelector('.task-card');
-      expect(taskCard?.className).toBe('task-card dragging');
+      expect(taskCard?.className).toBe('task-card task-card--pool dragging');
     });
 
     it('isDraggingが未指定の時、draggingクラスが適用されないことを確認', () => {
@@ -126,7 +157,7 @@ describe('TaskCard コンポーネント', () => {
       render(<TaskCard task={mockTask} onClick={mockOnClick} />);
 
       const taskCard = document.querySelector('.task-card');
-      expect(taskCard?.className).toBe('task-card ');
+      expect(taskCard?.className).toBe('task-card task-card--pool ');
     });
   });
 
