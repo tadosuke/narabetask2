@@ -46,23 +46,7 @@ describe('Timeline コンポーネント', () => {
         />
       );
 
-      expect(screen.getByText(/Timeline/)).toBeDefined();
-    });
-
-    it('勤務時間が正しく表示されることを確認', () => {
-      const mockOnTaskClick = vi.fn();
-      const mockOnTaskDrop = vi.fn();
-
-      render(
-        <Timeline
-          tasks={[]}
-          workingHours={mockWorkingHours}
-          onTaskClick={mockOnTaskClick}
-          onTaskDrop={mockOnTaskDrop}
-        />
-      );
-
-      expect(screen.getByText('Timeline (09:00 - 12:00)')).toBeDefined();
+      expect(screen.getByRole('heading')).toBeDefined();
     });
 
     it('タイムラインの基本構造が存在することを確認', () => {

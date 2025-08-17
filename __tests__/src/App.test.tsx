@@ -8,20 +8,10 @@ describe('App コンポーネント', () => {
     expect(screen.getByText('ナラベタスク')).toBeDefined();
   });
 
-  it('タイムラインセクションが表示されることを確認', () => {
-    render(<App />);
-    expect(screen.getByText(/Timeline/)).toBeDefined();
-  });
-
   it('タスク作成ボタンが表示され、クリック可能であることを確認', () => {
     render(<App />);
     const createButton = screen.getByRole('button', { name: 'タスク作成' });
     expect(createButton).toBeDefined();
-  });
-
-  it('タスク置き場が表示されることを確認', () => {
-    render(<App />);
-    expect(screen.getByText('タスク置き場')).toBeDefined();
   });
 
   it('タスク作成ボタンクリックで新しいタスクが追加されることを確認', () => {

@@ -106,9 +106,7 @@ export const Timeline = ({
       style={{ '--time-slots': timeSlots.length } as React.CSSProperties}
     >
       {/* Timeline header showing working hours */}
-      <h3>
-        Timeline ({workingHours.start} - {workingHours.end})
-      </h3>
+      <h3>タイムライン</h3>
 
       <div className="timeline-grid">
         {/* Header row displaying time slot labels */}

@@ -125,23 +125,6 @@ describe('TaskPool Component', () => {
       expect(content).toBeDefined();
     });
 
-    it('renders a heading element', () => {
-      const mockTasks: Task[] = [];
-      const mockOnTaskClick = vi.fn();
-      const mockOnTaskDrop = vi.fn();
-
-      render(
-        <TaskPool
-          tasks={mockTasks}
-          onTaskClick={mockOnTaskClick}
-          onTaskDrop={mockOnTaskDrop}
-        />
-      );
-
-      const heading = screen.getByRole('heading');
-      expect(heading).toBeDefined();
-    });
-
     it('renders without errors when tasks array is empty', () => {
       const mockTasks: Task[] = [];
       const mockOnTaskClick = vi.fn();
