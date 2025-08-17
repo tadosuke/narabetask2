@@ -26,12 +26,32 @@ interface TaskCardProps {
  *
  * Renders an individual task card with draggable and clickable functionality
  * Displays task name and duration, and supports drag and click interactions
+ * When placed on timeline, the card spans multiple slots based on task duration
  *
  * @component
  * @param {TaskCardProps} props - Component properties
  * @returns {React.ReactElement} Rendered task card element
  */
 export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
+  /**
+   * Calculate the width style for timeline placement
+   * When on timeline, task cards should span multiple slots based on duration
+   */
+  const getTimelineStyle = (): React.CSSProperties => {
+    if (task.position) {
+      // Each slot is 60px wide + 1px gap, total 61px per duration unit
+      const slotWidth = 60;
+      const gapWidth = 1;
+      const totalWidth =
+        task.duration * slotWidth + (task.duration - 1) * gapWidth;
+
+      return {
+        width: `${totalWidth}px`,
+        right: 'auto', // Override the CSS 'right: 2px' to allow custom width
+      };
+    }
+    return {};
+  };
   /**
    * Handles the drag start event for the task card
    * Sets the task ID as transfer data and configures drag effect
@@ -62,6 +82,8 @@ export const TaskCard = ({ task, onClick, isDragging }: TaskCardProps) => {
       // Attach drag start and click event handlers
       onDragStart={handleDragStart}
       onClick={handleClick}
+      // Apply timeline-specific styling for width calculation
+      style={getTimelineStyle()}
     >
       <div className="task-card-header">
         {/* Display the task name */}

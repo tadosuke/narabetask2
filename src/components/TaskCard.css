@@ -40,7 +40,9 @@
   position: absolute;
   top: 2px;
   left: 2px;
-  right: 2px;
   bottom: 2px;
   margin: 0;
+  /* Width is now controlled by inline style to span multiple slots */
+  /* right: 2px; - Removed to allow custom width calculation */
+  z-index: 5; /* Ensure task cards appear above timeline slots */
 }
