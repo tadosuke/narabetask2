@@ -61,12 +61,55 @@
   color: #495057;
   margin-bottom: 0.25rem;
   margin-left: 10px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .task-card-body {
   font-size: 0.875rem;
   color: #6c757d;
   margin-left: 10px;
+}
+
+/* Lock toggle button styles */
+.task-card-lock-toggle {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+  opacity: 0.7;
+}
+
+.task-card-lock-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  opacity: 1;
+}
+
+.task-card-lock-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Locked state styling */
+.task-card.locked {
+  cursor: default;
+}
+
+.task-card.locked:hover {
+  transform: none;
+  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+}
+
+.task-card.locked .task-card-header {
+  opacity: 0.8;
 }
 
 /* TaskCard inside timeline slots */
