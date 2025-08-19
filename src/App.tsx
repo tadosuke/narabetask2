@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import type { WorkingHours } from './types';
 import { Timeline } from './components/Timeline';
 import { TaskSettings } from './components/TaskSettings';
 import { TaskCreator, TaskPool } from './components/TaskPool';
+import { Splitter } from './components/Splitter';
 import { useTasks } from './hooks/useTasks';
 import { DEFAULT_WORKING_HOURS } from './constants';
 import './App.css';
@@ -12,6 +13,9 @@ import './App.css';
  * タスクの作成・編集・スケジューリング機能を提供
  */
 function App() {
+  // State for splitter position (percentage)
+  const [splitterPosition, setSplitterPosition] = useState(40);
+
   // 業務時間の設定（開始・終了時刻）
   const workingHours: WorkingHours = {
     start: DEFAULT_WORKING_HOURS.START,
@@ -52,7 +56,12 @@ function App() {
         <h1>ナラベタスク</h1>
       </header>
 
-      <div className="app-content">
+      <div
+        className="app-content"
+        style={{
+          gridTemplateRows: `${splitterPosition}% auto ${100 - splitterPosition}%`,
+        }}
+      >
         {/* Top: Timeline (horizontal scrollable) */}
         <div className="timeline-section">
           <Timeline
@@ -62,6 +71,16 @@ function App() {
             onTaskDrop={dropTaskToTimeline}
           />
         </div>
+
+        {/* Draggable splitter */}
+        <Splitter
+          orientation="horizontal"
+          initialPosition={splitterPosition}
+          minPosition={20}
+          maxPosition={80}
+          onPositionChange={setSplitterPosition}
+          className="main-splitter"
+        />
 
         {/* Bottom: Two-column layout for Task Pool and Settings */}
         <div className="two-column-section">

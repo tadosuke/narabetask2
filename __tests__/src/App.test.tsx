@@ -28,7 +28,7 @@ describe('App コンポーネント', () => {
     expect(screen.getByText('タスク 1')).toBeDefined();
   });
 
-  it('3段レイアウト構造が正しく適用されていることを確認', () => {
+  it('3段レイアウト構造とスプリッターが正しく適用されていることを確認', () => {
     render(<App />);
 
     // 各セクションが存在することを確認
@@ -39,5 +39,10 @@ describe('App コンポーネント', () => {
     expect(timelineSection).toBeDefined();
     expect(taskSection).toBeDefined();
     expect(settingsSection).toBeDefined();
+
+    // スプリッターが存在することを確認
+    const splitter = screen.getByRole('separator');
+    expect(splitter).toBeDefined();
+    expect(splitter).toHaveClass('main-splitter');
   });
 });

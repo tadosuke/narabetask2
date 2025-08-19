@@ -1,0 +1,86 @@
+/* Splitter Component Styles */
+.splitter {
+  background: #e9ecef;
+  position: relative;
+  z-index: 10;
+  transition: background-color 0.2s ease;
+}
+
+.splitter:hover {
+  background: #dee2e6;
+}
+
+.splitter-horizontal {
+  height: 6px;
+  cursor: ns-resize;
+  width: 100%;
+}
+
+.splitter-vertical {
+  width: 8px;
+  cursor: ew-resize;
+  height: 100%;
+}
+
+.splitter-dragging {
+  background: #007bff !important;
+}
+
+.splitter-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splitter-dots-horizontal {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.splitter-dots-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+
+.splitter-dot {
+  width: 3px;
+  height: 3px;
+  background: #6c757d;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.splitter:hover .splitter-dot {
+  background: #495057;
+}
+
+.splitter-dragging .splitter-dot {
+  background: white;
+}
+
+/* Focus styles for accessibility */
+.splitter:focus {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+.splitter:focus-visible {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+/* Prevent text selection during drag */
+.splitter-dragging,
+.splitter-dragging * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
