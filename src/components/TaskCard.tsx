@@ -57,8 +57,7 @@ export const TaskCard = ({
    */
   const getTimelineStyle = (): React.CSSProperties => {
     if (task.position) {
-      // Each slot is 60px wide + 1px gap, total 61px per duration unit
-      const slotWidth = 60;
+      const slotWidth = 50;
       const gapWidth = 1;
       const totalWidth =
         task.duration * slotWidth + (task.duration - 1) * gapWidth - 2;
