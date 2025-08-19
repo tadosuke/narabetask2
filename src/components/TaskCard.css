@@ -98,6 +98,17 @@
   transform: scale(0.95);
 }
 
+/* Locked state - dark blue background for lock icon */
+.task-card.locked .task-card-lock-toggle {
+  background-color: #1565c0;
+  opacity: 1;
+  color: white;
+}
+
+.task-card.locked .task-card-lock-toggle:hover {
+  background-color: #0d47a1;
+}
+
 /* Locked state styling */
 .task-card.locked {
   cursor: default;
