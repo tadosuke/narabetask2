@@ -48,4 +48,4 @@ export const MAX_TASK_DURATION_UNITS = 16;
  * Maximum number of rows in the timeline
  * Defines how many parallel tasks can be displayed
  */
-export const MAX_TIMELINE_ROWS = 5;
+export const MAX_TIMELINE_ROWS = 4;
