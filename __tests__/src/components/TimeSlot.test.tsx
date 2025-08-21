@@ -102,18 +102,6 @@ describe('TimeSlot', () => {
     expect(slot).toHaveClass('timeline-slot', 'occupied', 'conflict');
   });
 
-  it('shows conflict indicator when there is a conflict', () => {
-    vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(mockTask);
-    vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(true);
-    vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue(
-      'Conflict tooltip'
-    );
-
-    render(<TimeSlot {...defaultProps} />);
-
-    expect(screen.getByText('⚠️')).toBeInTheDocument();
-  });
-
   it('renders TaskCard when task is at start slot', () => {
     vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(mockTask);
     vi.mocked(TimelineUtils.isTaskStartSlot).mockReturnValue(true);

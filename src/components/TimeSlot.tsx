@@ -86,9 +86,6 @@ export const TimeSlot = ({
             variant="timeline"
           />
         )}
-
-      {/* Conflict indicator */}
-      {isConflictSlot && <div className="conflict-indicator">⚠️</div>}
     </div>
   );
 };
