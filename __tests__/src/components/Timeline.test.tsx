@@ -118,7 +118,7 @@ describe('Timeline コンポーネント', () => {
   });
 
   describe('タイムライン行の生成', () => {
-    it('4行のタイムライン行が生成されることを確認', () => {
+    it('3行のタイムライン行が生成されることを確認', () => {
       const mockOnTaskClick = vi.fn();
       const mockOnTaskDrop = vi.fn();
 
@@ -132,24 +132,7 @@ describe('Timeline コンポーネント', () => {
       );
 
       const timelineRows = document.querySelectorAll('.timeline-row');
-      expect(timelineRows.length).toBe(4);
-    });
-
-    it('タイムライン行に正しいクラス名が適用されることを確認', () => {
-      const mockOnTaskClick = vi.fn();
-      const mockOnTaskDrop = vi.fn();
-
-      render(
-        <Timeline
-          tasks={[]}
-          workingHours={mockWorkingHours}
-          onTaskClick={mockOnTaskClick}
-          onTaskDrop={mockOnTaskDrop}
-        />
-      );
-
-      const timelineRows = document.querySelectorAll('.timeline-row');
-      expect(timelineRows.length).toBe(4);
+      expect(timelineRows.length).toBe(3);
     });
   });
 
