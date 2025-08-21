@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import type { Task, WorkingHours } from '../types';
-import { TaskCard } from './TaskCard';
+import { TimeSlot } from './TimeSlot';
 import { generateTimeSlots } from '../utils/timeUtils';
-import { TimelineUtils } from '../utils/timelineUtils';
-import { ConflictService } from '../services/conflictService';
 import { MAX_TIMELINE_ROWS } from '../constants';
 import './Timeline.css';
 
@@ -121,52 +119,18 @@ export const Timeline = ({
         {/* Timeline rows for task placement */}
         {Array.from({ length: timelineRows }, (_, rowIndex) => (
           <div key={rowIndex} className="timeline-row">
-            {timeSlots.map((timeSlot) => {
-              // Determine task status and conflict information
-              const taskAtPosition = TimelineUtils.getTaskAtPosition(
-                timelineTasks,
-                rowIndex,
-                timeSlot
-              );
-              const hasConflict = ConflictService.hasTimeSlotConflict(
-                tasks,
-                timeSlot
-              );
-              const isConflictSlot = hasConflict && taskAtPosition;
-
-              // Generate tooltip text for conflicting tasks
-              const conflictTooltip = ConflictService.generateConflictTooltip(
-                tasks,
-                timeSlot
-              );
-
-              return (
-                <div
-                  key={`${rowIndex}-${timeSlot}`}
-                  // Dynamic CSS classes for slot state
-                  className={`timeline-slot ${taskAtPosition ? 'occupied' : 'empty'} ${isConflictSlot ? 'conflict' : ''}`}
-                  title={conflictTooltip}
-                  // Drag and drop event handlers
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, rowIndex, timeSlot)}
-                >
-                  {/* Render task card only at its start time */}
-                  {taskAtPosition &&
-                    TimelineUtils.isTaskStartSlot(taskAtPosition, timeSlot) && (
-                      <TaskCard
-                        task={taskAtPosition}
-                        onClick={onTaskClick}
-                        variant="timeline"
-                      />
-                    )}
-
-                  {/* Conflict indicator */}
-                  {isConflictSlot && (
-                    <div className="conflict-indicator">⚠️</div>
-                  )}
-                </div>
-              );
-            })}
+            {timeSlots.map((timeSlot) => (
+              <TimeSlot
+                key={`${rowIndex}-${timeSlot}`}
+                tasks={tasks}
+                timelineTasks={timelineTasks}
+                timeSlot={timeSlot}
+                rowIndex={rowIndex}
+                onTaskClick={onTaskClick}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              />
+            ))}
           </div>
         ))}
       </div>
