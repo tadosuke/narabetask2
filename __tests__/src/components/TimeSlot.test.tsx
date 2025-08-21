@@ -15,6 +15,7 @@ vi.mock('../../../src/services/conflictService', () => ({
   ConflictService: {
     hasTimeSlotConflict: vi.fn(),
     generateConflictTooltip: vi.fn(),
+    isTaskConflicted: vi.fn(),
   },
 }));
 
@@ -61,6 +62,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(null);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -71,6 +73,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(null);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -82,6 +85,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(mockTask);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -95,6 +99,7 @@ describe('TimeSlot', () => {
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue(
       'Conflict tooltip'
     );
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(true);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -107,6 +112,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.isTaskStartSlot).mockReturnValue(true);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -119,6 +125,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.isTaskStartSlot).mockReturnValue(false);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -129,6 +136,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(null);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -142,6 +150,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.getTaskAtPosition).mockReturnValue(null);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -162,6 +171,7 @@ describe('TimeSlot', () => {
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue(
       tooltipText
     );
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(true);
 
     render(<TimeSlot {...defaultProps} />);
 
@@ -174,6 +184,7 @@ describe('TimeSlot', () => {
     vi.mocked(TimelineUtils.isTaskStartSlot).mockReturnValue(true);
     vi.mocked(ConflictService.hasTimeSlotConflict).mockReturnValue(false);
     vi.mocked(ConflictService.generateConflictTooltip).mockReturnValue('');
+    vi.mocked(ConflictService.isTaskConflicted).mockReturnValue(false);
 
     render(<TimeSlot {...defaultProps} />);
 

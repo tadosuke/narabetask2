@@ -66,6 +66,32 @@ export class ConflictService {
   }
 
   /**
+   * Check if a specific task is involved in any conflicts
+   * @param tasks All tasks in the timeline
+   * @param targetTask The specific task to check for conflicts
+   * @returns true if the target task has conflicts with other tasks
+   */
+  static isTaskConflicted(tasks: Task[], targetTask: Task): boolean {
+    if (!targetTask.position) return false;
+
+    const taskStart = timeToMinutes(targetTask.position.startTime);
+    const taskEnd =
+      taskStart + targetTask.duration * TIME_SLOT_INCREMENT_MINUTES;
+
+    // Check if any other task overlaps with the target task
+    return tasks.some((otherTask) => {
+      if (otherTask.id === targetTask.id || !otherTask.position) return false;
+
+      const otherStart = timeToMinutes(otherTask.position.startTime);
+      const otherEnd =
+        otherStart + otherTask.duration * TIME_SLOT_INCREMENT_MINUTES;
+
+      // Check for any overlap between the time ranges
+      return taskStart < otherEnd && taskEnd > otherStart;
+    });
+  }
+
+  /**
    * 競合しているタスクのツールチップテキストを生成
    * @param tasks 全タスクリスト
    * @param timeSlot チェックするタイムスロット

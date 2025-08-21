@@ -60,6 +60,11 @@ export const TimeSlot = ({
   const hasConflict = ConflictService.hasTimeSlotConflict(tasks, timeSlot);
   const isConflictSlot = hasConflict && taskAtPosition;
 
+  // Check if the specific task at this position is conflicted
+  const isTaskConflicted = taskAtPosition
+    ? ConflictService.isTaskConflicted(tasks, taskAtPosition)
+    : false;
+
   // Generate tooltip text for conflicting tasks
   const conflictTooltip = ConflictService.generateConflictTooltip(
     tasks,
@@ -84,6 +89,7 @@ export const TimeSlot = ({
             task={taskAtPosition}
             onClick={onTaskClick}
             variant="timeline"
+            hasConflict={isTaskConflicted}
           />
         )}
     </div>

@@ -26,6 +26,11 @@ interface TaskCardProps {
    * @default 'pool'
    */
   variant?: 'pool' | 'timeline';
+  /**
+   * Optional flag to indicate if the task has conflicts with other tasks
+   * Used to apply conflict styling (red background)
+   */
+  hasConflict?: boolean;
 }
 
 /**
@@ -44,6 +49,7 @@ export const TaskCard = ({
   onClick,
   isDragging,
   variant = 'pool',
+  hasConflict = false,
 }: TaskCardProps) => {
   /**
    * Lock state for preventing drag and drop when true
@@ -108,8 +114,8 @@ export const TaskCard = ({
 
   return (
     <div
-      // Dynamically apply variant, dragging, and locked classes
-      className={`task-card task-card--${variant} ${isDragging ? 'dragging' : ''}${isLocked && variant === 'timeline' ? ' locked' : ''}`}
+      // Dynamically apply variant, dragging, locked, and conflict classes
+      className={`task-card task-card--${variant} ${isDragging ? 'dragging' : ''}${isLocked && variant === 'timeline' ? ' locked' : ''}${hasConflict ? ' task-card--conflict' : ''}`}
       // Make the div draggable only if not locked or not on timeline
       draggable={!(variant === 'timeline' && isLocked)}
       // Attach drag start and click event handlers
