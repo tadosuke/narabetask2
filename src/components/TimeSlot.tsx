@@ -2,6 +2,7 @@ import type { Task } from '../types';
 import { TaskCard } from './TaskCard';
 import { TimelineUtils } from '../utils/timelineUtils';
 import { ConflictService } from '../services/conflictService';
+import './TimeSlot.css';
 
 /**
  * Props interface for the TimeSlot component

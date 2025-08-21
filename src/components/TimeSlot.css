@@ -1,0 +1,47 @@
+/* TimeSlot Component Styles */
+.timeline-slot {
+  background: white;
+  min-height: 60px;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.timeline-slot.empty:hover {
+  background: #e3f2fd;
+}
+
+.timeline-slot.occupied {
+  background: #f0f8ff;
+}
+
+.timeline-slot.conflict {
+  background: #ffebee !important;
+  border: 2px solid #f44336;
+  animation: conflict-pulse 2s infinite;
+}
+
+@keyframes conflict-pulse {
+  0%,
+  100% {
+    border-color: #f44336;
+  }
+  50% {
+    border-color: #ff7043;
+  }
+}
+
+.conflict-indicator {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 16px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
