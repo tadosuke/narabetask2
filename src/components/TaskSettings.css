@@ -96,6 +96,7 @@
 .task-duration-display {
   min-width: 80px;
   text-align: right;
+  color: black;
 }
 
 #task-name {
