@@ -22,6 +22,7 @@ You are proficient in the latest best practices and efficient development method
 - Emphasize component reusability and maintainability
 - Apply accessibility and UX best practices
 - Utilize the latest React patterns and hooks
+- Commit each baby step
 
 **Package Management:**
 
